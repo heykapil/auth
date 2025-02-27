@@ -2,18 +2,18 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useCachedSession } from "@/hooks/use-cached-session";
-import { authClient, signOut } from "@/lib/auth-client";
+import { authClient, signOut, useSession } from "@/lib/auth-client";
 import { CheckCircle, CircleX, Key, LogOut } from "lucide-react";
 import { toast } from "sonner";
 export  default function ProfilePage() {
-    const session = useCachedSession();
-    if(!session?.data) {
+  const { data: session } = useSession();
+  console.log(session)
+    if(!session) {
         return <div>
           Not authenticated
         </div>
     }
-    const user = session?.data.user
+    const user = session?.user
     return (
       <div>
           <Card className="w-full max-w-2xl mx-auto">

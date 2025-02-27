@@ -26,6 +26,7 @@ export const auth = betterAuth({
           } else {
             await sendVerificationLink(user.email, url, token);
           }},
+          expiresIn: 10 * 60 // 10 minutes
         },
       account: {
               accountLinking: {

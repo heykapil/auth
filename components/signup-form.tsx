@@ -1,19 +1,20 @@
 'use client'
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle
 } from "@/components/ui/card";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { authClient } from "@/lib/auth-client";
@@ -79,7 +80,10 @@ export function SignUpForm() {
     <div className="flex flex-col gap-6">
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardTitle className="text-xl">Create account</CardTitle>
+          <CardDescription className="text-center">
+            Fill up the below form to create an account.
+          </CardDescription>
         </CardHeader>
         <CardContent>
         <Form {...form}>
@@ -167,11 +171,22 @@ export function SignUpForm() {
                 </FormItem>
                 )}
                 />
-            <Button type="submit" className="mt-2 flex flex-row w-full justify-center items-center" disabled={isLoading}>
-              {isLoading ? (<span className="flex flex-row justify-center items-center w-full">Creating <Spinner className="w-4 h-4 absolute ml-2" /></span>) : `Create an account!`}
+                <div className="pt-2" />
+            <Button type="submit" className="flex flex-row w-full justify-center items-center" disabled={isLoading}>
+              {isLoading ? (<span className="flex flex-row justify-center items-center w-full">Creating... <Spinner className="w-4 h-4 absolute ml-2" /></span>) : `Continue`}
             </Button>
               </form>
             </Form>
+            <div className="flex flex-col gap-4 mt-6">
+                <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+                  <span className="relative z-10 bg-background px-2 text-muted-foreground">
+                    Have an account?{" "}
+                    <a href="/login" className="underline hover:text-blue-500 underline-offset-4">
+                      Login
+                    </a>
+                  </span>
+                </div>
+              </div>
         </CardContent>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">

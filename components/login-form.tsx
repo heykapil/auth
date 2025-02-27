@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent, CardDescription,
-    CardFooter, CardHeader, CardTitle
+    CardHeader, CardTitle
 } from "@/components/ui/card"
 import {
     Form,
@@ -146,9 +146,9 @@ export function LoginForm() {
     <>
     <Card className="w-2xl">
       <CardHeader className="text-center">
-        <CardTitle className="text-xl">Welcome back</CardTitle>
+        <CardTitle className="text-xl">Welcome back!</CardTitle>
         <CardDescription>
-          Login with your Social account, Email or Passkey!
+          Sign into your account using your social account, email, or registered passkey!
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -241,7 +241,7 @@ export function LoginForm() {
                     />
                     <FormField
                       control={form.control}
-                      //@ts-ignore
+                      // @ts-ignore
                       name="password"
                       render={({ field }) => (
                       <FormItem>
@@ -286,26 +286,22 @@ export function LoginForm() {
         <Button variant='secondary' className='flex flex-row mx-auto w-full font-mono text-sm font-medium items-center mt-1.5'  onClick={async ()=>await signInPasskey()}>
           {isPasskeyLoading ? (<Spinner className="w-4 h-4 absolute" />): (<span className="flex flex-row mx-auto">Login using passkey
             <Fingerprint className="w-4 h-4 ml-2" /></span>)}</Button>
-          <div className="flex flex-col gap-4 mt-6">
-              <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-                <span className="relative z-10 bg-background px-2 text-muted-foreground">
-                  Create an account?{" "}
-                  <a href="/signup" className="underline underline-offset-4">
-                    Sign up
-                  </a>
-                </span>
-              </div>
-              <div className="text-center text-sm">
-              </div>
+        <div className="flex flex-col gap-4 mt-6">
+            <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+              <span className="relative z-10 bg-background px-2 text-muted-foreground">
+                Create an account?{" "}
+                <a href="/signup" className="underline hover:text-blue-500 underline-offset-4">
+                  Sign up
+                </a>
+              </span>
             </div>
+          </div>
     </CardContent>
-    <CardFooter>
-      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
-      </div>
-    </CardFooter>
     </Card>
+    <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
+      By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
+      and <a href="#">Privacy Policy</a>.
+    </div>
     </>
   )
     }
