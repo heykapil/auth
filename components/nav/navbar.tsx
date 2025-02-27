@@ -36,21 +36,21 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-all text-primary items-center justify-center mx-auto duration-200",
+        "sticky top-0 z-50 w-full transition-all text-primary items-center justify-center mx-auto",
         isScrolled
           ? "border-b backdrop-blur supports-[backdrop-filter]:bg-transparent/60"
           : "bg-transparent border-b",
       )}
     >
       <div className="container flex flex-row mx-auto h-16  items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Link href="/" className="text-md flex flex-row gap-2 font-bold">
+        <div className="flex items-center gap-2 mx-2">
+          <Link href="/" className="text-normal text-gray-500 items-center text-normal flex flex-row gap-2">
           <Image
             className="rounded-full"
             alt='logo'
             src="/icon.png"
-            width={25}
-            height={25}
+            width={30}
+            height={30}
             />
             auth.kapil.app
           </Link>
@@ -104,8 +104,8 @@ function ThemeToggle() {
 
   return (
     <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-      <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <Moon className="h-6 w-6 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Sun className="absolute h-6 w-6 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
       <span className="sr-only">Toggle theme</span>
     </Button>
   )

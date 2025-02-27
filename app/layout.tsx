@@ -2,17 +2,22 @@ import { Navbar } from "@/components/nav/navbar";
 import { Providers } from "@/components/theme/provider";
 import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fira_Mono, Readex_Pro } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const readexPro = Readex_Pro({
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
+// const libre = Libre_Baskerville({
+//   subsets: ["latin"],
+//   weight: ['400', '700']
+// });
+
+const firaMono = Fira_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  weight: ['400', '500', '700']
 });
 
 export const metadata: Metadata = {
@@ -28,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${readexPro.className} ${firaMono.variable} antialiased`}
       >
         <Providers>
         <Navbar />

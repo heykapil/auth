@@ -1,20 +1,37 @@
 'use client'
+import { Spinner } from "@/components/spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { authClient, signOut, useSession } from "@/lib/auth-client";
 import { CheckCircle, CircleX, Key, LogOut } from "lucide-react";
+import { Suspense } from "react";
 import { toast } from "sonner";
 export  default function ProfilePage() {
   const { data: session } = useSession();
-  console.log(session)
-    if(!session) {
-        return <div>
-          Not authenticated
-        </div>
-    }
-    const user = session?.user
+  const user = session?.user
+  if(!user?.id) {
+        return <Suspense fallback={<Spinner />}>
+          <div className="flex mt-16 w-full mx-auto justify-center p-2 max-w-sm flex-col gap-6">
+                  <h2 className="animate-fade-right text-2xl font-semibold">
+                    Not Authorized!
+                  </h2>
+                  <p className="animate-fade-up">No session to view the profile!</p>
+                  <p className="mt-10">
+                    Kindly{' '}
+                    <a
+                      className="font-medium underline underline-offset-2"
+                      href={`/login?callbackURL=/profile`}
+                    >
+                      login
+                    </a>{' '}
+                    with your account to access the profile!
+                  </p>
+                </div>
+        </Suspense>
+  }
     return (
+      <Suspense fallback={<Spinner />}>
       <div>
           <Card className="w-full max-w-2xl mx-auto">
                 <CardHeader>
@@ -58,10 +75,10 @@ export  default function ProfilePage() {
                     <Key className="w-4 h-4 mr-2" />
                     Add passkeys
                   </Button>
-                  <Button variant="default"  onClick={async() => await listPasskey()}>
+                  {/* <Button variant="default"  onClick={async() => await listPasskey()}>
                     <Key className="w-4 h-4 mr-2" />
                     List passkeys
-                  </Button>
+                  </Button> */}
                   <Button variant="destructive" onClick={async() => await signOut()}>
                     <LogOut className="w-4 h-4 mr-2" />
                     SignOut
@@ -69,6 +86,7 @@ export  default function ProfilePage() {
                 </CardFooter>
               </Card>
       </div>
+      </Suspense>
     )
 }
 
