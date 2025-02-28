@@ -34,13 +34,13 @@ import { Input } from "./ui/input"
 export function LoginForm() {
     const searchParams = useSearchParams();
     const callbackURL = searchParams?.get("callbackURL") || '/profile';
+    const { toast } = useToast();
+    const router = useRouter();
     const [isLoading, setisLoading] = useState<boolean>(false)
     const [isLoadingGithub, setisLoadingGithub] = useState<boolean>(false)
     const [isLoadingTwitter, setisLoadingTwitter] = useState<boolean>(false)
     const [isLoadingGoogle, setisLoadingGoogle] = useState<boolean>(false)
     const [isPasskeyLoading, setisPasskeyLoading] = useState<boolean>(false)
-    const { toast } = useToast();
-    const router = useRouter();
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [magicLink, setmagicLink] = useState<boolean>(false);
     const schema = magicLink ? loginSchemaMagicLink : loginSchemaCredentials;
@@ -65,7 +65,7 @@ export function LoginForm() {
                       title: "Welcome back!"
                     });
 										router.push(callbackURL);
-                    router.refresh();
+                    // router.refresh();
 									},
 									onError(context) {
                     toast({
@@ -74,22 +74,16 @@ export function LoginForm() {
                       title: "Something went wrong!"
                     });
 									},
-								},
-      })
-          .then(()=> setisPasskeyLoading(false))
-          .catch((err)=> {
-            setisPasskeyLoading(false)
-            toast({
-              description: err.message,
-              variant: "destructive",
-              title: "Something went wrong!"
-            })
-          })
-          .finally(
-            () => {
-              router.push(callbackURL);
-              router.refresh()
-            })
+								}})
+                  .then(()=> setisPasskeyLoading(false))
+                  .catch((err)=> {
+                        setisPasskeyLoading(false)
+                        toast({
+                          description: err.message,
+                          variant: "destructive",
+                          title: "Something went wrong!"
+                        })
+                      })
     }
   async function onSubmit(values: any) {
     if (magicLink) {
