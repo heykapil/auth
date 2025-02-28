@@ -156,7 +156,7 @@ export function LoginForm() {
           <Accordion type="single" collapsible defaultValue="item-1" className="w-full space-y-0">
             <AccordionItem value="item-1">
               <AccordionTrigger>
-                <a className="bg-secondary font-mono text-secondary-foreground shadow-sm hover:bg-secondary/80 px-4 py-2 justify-center flex flex-row rounded-lg mx-auto items-center place-items-center w-full text-center">Social accounts
+                <a className="bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 px-4 py-2 justify-center flex flex-row rounded-lg mx-auto items-center place-items-center w-full text-center">Social accounts
                   <UsersRoundIcon className="w-4 h-4 mx-2" />
                   </a>
               </AccordionTrigger>
@@ -217,7 +217,7 @@ export function LoginForm() {
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
-              <AccordionTrigger><a className='bg-secondary font-mono text-secondary-foreground shadow-sm hover:bg-secondary/80 px-4 py-2 justify-center flex flex-row rounded-lg mx-auto items-center place-items-center w-full text-center'>Login using email <AtSign className="w-4 h-4 ml-2" /></a> </AccordionTrigger>
+              <AccordionTrigger><a className='bg-secondary  text-secondary-foreground shadow-sm hover:bg-secondary/80 px-4 py-2 justify-center flex flex-row rounded-lg mx-auto items-center place-items-center w-full text-center'>Login using email <AtSign className="w-4 h-4 ml-2" /></a> </AccordionTrigger>
               <AccordionContent className='mx-2'>
                 <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -283,7 +283,7 @@ export function LoginForm() {
             </AccordionItem>
           </Accordion>
         </div>
-        <Button variant='secondary' className='flex flex-row mx-auto w-full font-mono text-sm font-medium items-center mt-1.5'  onClick={async ()=>await signInPasskey()}>
+        <Button variant='secondary' className='flex flex-row mx-auto w-full  text-sm font-medium items-center mt-1.5'  onClick={async ()=>await signInPasskey()}>
           {isPasskeyLoading ? (<Spinner className="w-4 h-4 absolute" />): (<span className="flex flex-row mx-auto">Login using passkey
             <Fingerprint className="w-4 h-4 ml-2" /></span>)}</Button>
         <div className="flex flex-col gap-4 mt-6">
