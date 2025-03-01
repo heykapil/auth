@@ -1,5 +1,4 @@
 'use client'
-import { Spinner } from "@/components/spinner";
 import {
   Avatar,
   AvatarFallback,
@@ -7,41 +6,49 @@ import {
 } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { authClient, Session, signOut } from "@/lib/auth-client";
-import { CheckCircle, CircleX, Key, LogOut } from "lucide-react";
+import { authClient, signOut } from "@/lib/auth-client";
+import { CheckCircle, CircleX, Edit, Key, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Suspense } from "react";
-export function ClientProfile({session, user}: Session) {
+import SessionsManager from "./sessions-manager";
+export function ClientProfile({ session, user, sessions }: { session:any, user:any, sessions: any }) {
   const { toast } = useToast();
   function GetInitial(name: string){
     const initials = name?.match(/(\b\S)?/g)?.join("")?.match(/(^\S|\S$)?/g)?.join("")?.toUpperCase()
     return initials;
   }
-  const router = useRouter()
+  const router = useRouter();
     return (
-      <Suspense fallback={<Spinner />}>
       <div>
-          <Card className="w-full max-w-2xl mx-auto">
-                <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-center">User Profile</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="flex items-center space-x-4">
+          <div className="w-full rounded-lg m-2 p-2 max-w-2xl space-y-6 mx-auto bg-neutral-50 dark:bg-neutral-950">
+                <div>
+                  <div className="text-2xl font-bold text-center">User Profile</div>
+                </div>
+                <div className="space-y-6">
+                  <div className="flex container justify-between items-center">
+                    <div className="flex flex-row space-x-4 items-center">
+                  <div className="flex">
                     <Avatar>
                   <AvatarImage src={user.image as string} alt={user.name} />
                   <AvatarFallback>{GetInitial(user.name)}</AvatarFallback>
                         </Avatar>
+                  </div>
                     <div>
                       <h2 className="text-xl font-semibold">{user.name}</h2>
-                      <p className="text-sm text-muted-foreground">@{user.username}</p>
+                      <p className="text-sm text-muted-foreground">@{user?.username}</p>
                     </div>
                   </div>
-                  <div className="space-y-2">
+                    <div className='flex'>
+                      <Button variant="secondary">
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit profile
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="flex flex-col space-y-2">
                     <div className="flex items-center space-x-2">
                       <span className="font-medium">Email:</span>
-                      <span className='text-pretty'>{user.email}</span>
+                      <span className='text-pretty text-muted-foreground'>{user.email}</span>
                       {user.emailVerified ? (
                         <Badge variant="secondary" className="ml-2">
                           <CheckCircle className="w-3 h-3 mr-1" />
@@ -54,10 +61,13 @@ export function ClientProfile({session, user}: Session) {
                         </Badge>
                       )}
                     </div>
+                    <p className="">Last login: <span className='text-muted-foreground text-pretty'>{new Date(session.createdAt).toLocaleDateString('en-IN', {month: 'long',day: 'numeric', year: 'numeric'} )}</span></p>
+                    {/* <p className="">IPAddress: <span className='text-muted-foreground text-pretty'>{session?.ipAddress}</span></p> */}
+
                   </div>
                   {/* <ChangePasswordForm /> */}
-                </CardContent>
-                <CardFooter className="flex justify-between">
+                </div>
+                <div className="flex justify-between">
                   <Button variant="default"  onClick={async() => await AddPasskey(toast)}>
                     <Key className="w-4 h-4 mr-2" />
                     Add passkeys
@@ -78,10 +88,12 @@ export function ClientProfile({session, user}: Session) {
                     <LogOut className="w-4 h-4 mr-2" />
                     SignOut
                   </Button>
-                </CardFooter>
-              </Card>
+                </div>
+                <div>
+                </div>
+                <SessionsManager session={session} sessions={sessions} />
+              </div>
       </div>
-      </Suspense>
     )
 }
 
