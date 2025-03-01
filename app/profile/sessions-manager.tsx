@@ -12,7 +12,7 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useToast } from "@/hooks/use-toast"
 import { authClient } from "@/lib/auth-client"
-import { formatUAString, parseUserAgent } from "@/lib/user-agent"
+import { parseUserAgent } from "@/lib/user-agent"
 import { Shield, X } from "lucide-react"
 import { useState } from "react"
 
@@ -57,7 +57,7 @@ export default function SessionsManager({ sessions, session }:{ session: any, se
               {sessions.map((item:any) => (
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">
-                    {formatUAString(parseUserAgent(item.userAgent))}
+                    {parseUserAgent(item.userAgent)}
                     {session?.ipAddress === item.ipAddress && (
                       <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">Current</span>
                     )}
