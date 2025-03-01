@@ -1,23 +1,23 @@
 'use client'
 import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import {
-    Card,
-    CardContent, CardDescription,
-    CardHeader, CardTitle
+  Card,
+  CardContent, CardDescription,
+  CardHeader, CardTitle
 } from "@/components/ui/card"
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from "@/components/ui/form"
 import { useToast } from "@/hooks/use-toast"
 import { signIn } from "@/lib/auth-client"
@@ -36,27 +36,23 @@ export function LoginForm() {
     const callbackURL = searchParams?.get("callbackURL") || '/profile';
     const { toast } = useToast();
     const router = useRouter();
-    const [isLoading, setisLoading] = useState<boolean>(false)
-    const [isLoadingGithub, setisLoadingGithub] = useState<boolean>(false)
-    const [isLoadingTwitter, setisLoadingTwitter] = useState<boolean>(false)
-    const [isLoadingGoogle, setisLoadingGoogle] = useState<boolean>(false)
-    const [isPasskeyLoading, setisPasskeyLoading] = useState<boolean>(false)
-    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [loading, setLoading] = useState<Record<string, boolean>>({})
     const [magicLink, setmagicLink] = useState<boolean>(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const schema = magicLink ? loginSchemaMagicLink : loginSchemaCredentials;
     const form = useForm<z.infer<typeof schema>>({
       resolver: zodResolver(schema)
       }
     )
     async function signInPasskey() {
-        setisPasskeyLoading(true)
+        setLoading(prev => ({...prev, 'passkey' :true}))
       await signIn.passkey({
         fetchOptions: {
                   onRequest(){
-                    setisPasskeyLoading(true)
+                    setLoading(prev => ({...prev, 'passkey' :true}))
                   },
                   onResponse(){
-                    setisPasskeyLoading(false)
+                    setLoading(prev => ({...prev, 'passkey' :false}))
                   },
 									onSuccess() {
 									 toast({
@@ -75,9 +71,9 @@ export function LoginForm() {
                     });
 									},
 								}})
-                  .then(()=> setisPasskeyLoading(false))
+                  .then(()=> setLoading(prev => ({...prev, 'passkey' :false})))
                   .catch((err)=> {
-                        setisPasskeyLoading(false)
+                    setLoading(prev => ({...prev, 'passkey' :false}))
                         toast({
                           description: err.message,
                           variant: "destructive",
@@ -87,14 +83,12 @@ export function LoginForm() {
     }
   async function onSubmit(values: any) {
     if (magicLink) {
-      setisLoading(true)
+      setLoading(prev => ({...prev, 'magic' :true}))
       await signIn.magicLink({ email: values.email, callbackURL: callbackURL },{
         onRequest: () => {
-          setisLoading(true)
-        },
+          setLoading(prev => ({...prev, 'magic' :true}))        },
         onResponse: () => {
-          setisLoading(false)
-        },
+          setLoading(prev => ({...prev, 'magic' : false}))        },
         onError: (ctx) => {
           toast({
             description: ctx.error?.message,
@@ -113,11 +107,9 @@ export function LoginForm() {
     } else {
       await signIn.email({ email: values.email, password: values.password, callbackURL: callbackURL },{
       onRequest: () => {
-        setisLoading(true)
-      },
+        setLoading(prev => ({...prev, 'credentials' :true}))      },
       onResponse: () => {
-				setisLoading(false);
-				},
+        setLoading(prev => ({...prev, 'credentials' :false}))				},
 			onError: (ctx) => {
           toast({
             description: ctx.error?.message,
@@ -133,7 +125,7 @@ export function LoginForm() {
           })
         }
       })
-      .then(()=> setisLoading(false))
+      .then(()=> setLoading(prev => ({...prev, 'credentials' :false})))
     }
   }
   return (
@@ -158,27 +150,26 @@ export function LoginForm() {
                 <div className="grid gap-6">
                   <div className="flex flex-col gap-4">
                       <Button variant="outline" onClick={async () => {
-                        setisLoadingGithub(true)
+                        setLoading(prev => ({...prev, 'github' :true}))
                         await signIn.social({
                           provider: 'github',
                           callbackURL: callbackURL
                         })
-                        setisLoadingGithub(false)
-                      }
+                        setLoading(prev => ({...prev, 'github' :false}))                      }
                       } className="w-full">
-                        {isLoadingGithub ? <Spinner className="w-4 h-4 aboslute" /> : (<span className="flex flex-row justify-center items-center"><Github className="w-4 h-4 mr-2" />
+                        {loading['github'] === true ? <Spinner className="w-4 h-4 aboslute" /> : (<span className="flex flex-row justify-center items-center"><Github className="w-4 h-4 mr-2" />
                           Login with Github
                         </span>)}
                     </Button>
                       <Button variant="outline" className="w-full" onClick={async () => {
-                        setisLoadingTwitter(true)
+                        setLoading(prev => ({...prev, 'twitter' :true}))
                         await signIn.social({
                           provider: 'twitter',
                           callbackURL: callbackURL
                         })
-                        setisLoadingTwitter(false)
+                        setLoading(prev => ({...prev, 'twitter' :false}))
                       }}>
-                        {isLoadingTwitter ? <Spinner className="w-4 h-4 aboslute" /> : (
+                        {loading['twitter'] === true ? <Spinner className="w-4 h-4 aboslute" /> : (
                         <span className="flex flex-row justify-center items-center">
                           <svg xmlns="http://www.w3.org/2000/svg" className="mr-2" viewBox="0 0 50 50">
                         <path fill="currentColor" d="M 5.9199219 6 L 20.582031 27.375 L 6.2304688 44 L 9.4101562 44 L 21.986328 29.421875 L 31.986328 44 L 44 44 L 28.681641 21.669922 L 42.199219 6 L 39.029297 6 L 27.275391 19.617188 L 17.933594 6 L 5.9199219 6 z M 9.7167969 8 L 16.880859 8 L 40.203125 42 L 33.039062 42 L 9.7167969 8 z"></path>
@@ -187,15 +178,14 @@ export function LoginForm() {
                       </span>)}
                     </Button>
                       <Button variant="outline" onClick={async () => {
-                        setisLoadingGoogle(true)
+                        setLoading(prev => ({ ...prev, 'google': true }));
                         await signIn.social({
-                        provider: 'google',
-                        callbackURL: callbackURL
-                      })
-                        setisLoadingGoogle(false)
-                      }
-                    } className="w-full">
-                      {isLoadingGoogle ? <Spinner className="w-4 h-4 aboslute" /> : (
+                          provider: 'google',
+                          callbackURL: callbackURL
+                        });
+                        setLoading(prev => ({...prev, 'google' :false}))
+                      }} className="w-full">
+                      { loading['google'] === true ? <Spinner className="w-4 h-4 aboslute" /> : (
                         <span className="flex flex-row justify-center items-center">
                       <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path
@@ -268,8 +258,8 @@ export function LoginForm() {
                     </FormItem>
                     )}
                       />
-                  <Button type="submit" className="w-full">
-                    {isLoading ? (<Spinner className='absolute' /> ) :   (magicLink ? 'Send Magic Link' : 'Login')}
+                  <Button type="submit" className="w-full" disabled={loading['magic'] || loading['credentials']}>
+                    {(loading['credentials'] === true || loading['magic'] === true) ? (<Spinner className='absolute' /> ) :   (magicLink ? 'Send Magic Link' : 'Login')}
                   </Button>
                 </form>
                 </Form>
@@ -278,7 +268,7 @@ export function LoginForm() {
           </Accordion>
         </div>
         <Button variant='secondary' className='flex flex-row mx-auto w-full  text-sm font-medium items-center mt-1.5'  onClick={async ()=>await signInPasskey()}>
-          {isPasskeyLoading ? (<Spinner className="w-4 h-4 absolute" />): (<span className="flex flex-row mx-auto">Login using passkey
+          {loading['passkey'] === true ? (<Spinner className="w-4 h-4 absolute" />): (<span className="flex flex-row mx-auto">Login using passkey
             <Fingerprint className="w-4 h-4 ml-2" /></span>)}</Button>
         <div className="flex flex-col gap-4 mt-6">
             <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">

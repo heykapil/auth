@@ -8,15 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { authClient, signOut } from "@/lib/auth-client";
-import { CheckCircle, CircleX, Edit, Key, LogOut } from "lucide-react";
+import { GetInitial } from "@/lib/get-initials";
+import { CheckCircle, CircleX, Key, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import EditProfile from "./edit-profile";
 import SessionsManager from "./sessions-manager";
 export function ClientProfile({ session, user, sessions }: { session:any, user:any, sessions: any }) {
   const { toast } = useToast();
-  function GetInitial(name: string){
-    const initials = name?.match(/(\b\S)?/g)?.join("")?.match(/(^\S|\S$)?/g)?.join("")?.toUpperCase()
-    return initials;
-  }
   const router = useRouter();
     return (
       <div>
@@ -39,10 +37,7 @@ export function ClientProfile({ session, user, sessions }: { session:any, user:a
                     </div>
                   </div>
                     <div className='flex'>
-                      <Button variant="secondary">
-                        <Edit className="w-4 h-4 mr-2" />
-                        Edit profile
-                      </Button>
+                      <EditProfile session={session} user={user} />
                     </div>
                   </div>
                   <div className="flex flex-col space-y-2">

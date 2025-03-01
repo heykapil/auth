@@ -33,8 +33,8 @@ export default function SessionsManager({ sessions, session }:{ session: any, se
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="gap-2">
-          <Shield className="h-4 w-4" />
-          Active Sessions
+          <Shield className="h-4 w-4 mr-2" />
+          Active sessions
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[800px]">

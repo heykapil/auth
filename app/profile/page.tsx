@@ -12,11 +12,11 @@ export default async function ProfilePage() {
   if(sessionError){
     console.log(sessionError?.message)
   }
-  const { data: sessions, error } = await betterFetch<[]>('/api/auth/list-sessions',{
+  const { data: sessions } = await betterFetch<[]>('/api/auth/list-sessions',{
     baseURL: process.env.BETTER_AUTH_URL,
     headers: await headers()
   })
-  console.log( error)
+  // console.log( error)
   if(!session) {
     return <div className="flex mt-16 w-full mx-auto justify-center p-2 max-w-sm flex-col gap-6">
             <h2 className="animate-fade-right text-2xl font-semibold">
