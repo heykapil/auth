@@ -75,6 +75,16 @@ export const auth = betterAuth({
     plugins: [
            username(),
            passkey(),
+           // emailOTP({
+           //  async sendVerificationOTP({ email, otp }) {
+           //    if (process.env.NODE_ENV === "development") {
+           //      console.log("✨ Verification OTP: " + otp);
+           //    } else {
+           //      const url = `https://auth.kapil.app/verify-email?email=${email}&otp=${otp}`;
+           //      await sendVerificationLink(email, url, otp);
+           //    }
+           //  }
+           // }),
            magicLink({
                  sendMagicLink: async ({ email, url }, request) => {
                    if (process.env.NODE_ENV === "development") {

@@ -5,6 +5,7 @@ export const authClient =  createAuthClient({
   plugins: [
     usernameClient(),
     magicLinkClient(),
+    // emailOTPClient(),
     passkeyClient()
   ]
 })
@@ -17,6 +18,7 @@ export const {
   updateUser,
   getSession,
   changePassword,
+  // emailOtp,
   resetPassword,
   sendVerificationEmail,
   changeEmail,

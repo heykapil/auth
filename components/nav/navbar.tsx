@@ -1,13 +1,13 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { cn } from "@/lib/utils"
-import { Menu, Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
-import Image from "next/image"
-import Link from "next/link"
-import * as React from "react"
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
+import { AlignJustify, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import Image from "next/image";
+import Link from "next/link";
+import * as React from "react";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -70,22 +70,21 @@ export function Navbar() {
         <div className="flex items-center gap-2 md:hidden">
           <ThemeToggle />
           <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
+            <SheetTrigger asChild className="mr-2">
+              <Button variant="ghost" size='icon'>
+                <AlignJustify />
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
               <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
+                <SheetTitle className="sr-only">Menu</SheetTitle>
               </SheetHeader>
-              <nav className="mt-8 flex flex-col gap-4">
+              <nav className="mt-8 flex flex-col gap-1">
                 {navItems.map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="text-base font-medium transition-colors hover:text-primary"
+                    className="font-normal transition-colors hover:bg-sidebar-accent p-2 rounded-lg hover:text-sidebar-accent-foreground"
                   >
                     {item.name}
                   </Link>

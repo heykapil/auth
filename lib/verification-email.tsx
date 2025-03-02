@@ -37,9 +37,9 @@ export const VerificationEmail = ({
           Click here to verify your account with this link
         </Link>
         <Text style={{ ...text, marginBottom: '14px' }}>
-          Or, copy and paste this token code
+          Or, copy and paste this url in your browser:
           <Link
-            href="https://auth.kapil.app/verify-email"
+            href={url}
             target="_blank"
             style={{
               ...link,
@@ -49,7 +49,7 @@ export const VerificationEmail = ({
           > here
           </Link>
         </Text>
-        <code style={code}>{token}</code>
+        <code style={code}>{url}</code>
         <Text
           style={{
             ...text,
@@ -58,7 +58,7 @@ export const VerificationEmail = ({
             marginBottom: '16px',
           }}
         >
-          This token or link is valid for 10 mins.
+          This verification link is valid for 10 mins.
         </Text>
         <Text
           style={{

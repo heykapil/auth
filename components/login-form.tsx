@@ -33,7 +33,8 @@ import { Spinner } from "./spinner"
 import { Input } from "./ui/input"
 export function LoginForm() {
     const searchParams = useSearchParams();
-    const callbackURL = searchParams?.get("callbackURL") || '/profile';
+    const redirectTo = searchParams?.get("redirectTo") || '/profile';
+    const callbackURL = `/?redirectTo=`+ encodeURIComponent(redirectTo);
     const { toast } = useToast();
     const router = useRouter();
     const [loading, setLoading] = useState<Record<string, boolean>>({})
@@ -274,7 +275,7 @@ export function LoginForm() {
             <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
               <span className="relative z-10 bg-background px-2 text-muted-foreground">
                 Create an account?{" "}
-                <a href="/signup" className="underline hover:text-blue-500 underline-offset-4">
+                <a href={`/signup?redirectTo=${redirectTo}`} className="underline hover:text-blue-500 underline-offset-4">
                   Sign up
                 </a>
               </span>

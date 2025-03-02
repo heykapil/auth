@@ -1,25 +1,26 @@
 'use client'
 import { Button } from "@/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
 } from "@/components/ui/card";
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { authClient } from "@/lib/auth-client";
 import { generateUserID } from "@/lib/userid";
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSearchParams } from "next/dist/client/components/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -46,7 +47,9 @@ export function SignUpForm() {
   })
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false)
-  const username = generateUserID()
+  const username = generateUserID();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams?.get('redirectTo') || '/profile'
   async function onSubmit(values: any) {
     setIsLoading(true)
     const { data, error } = await authClient.signUp.email({
@@ -181,7 +184,7 @@ export function SignUpForm() {
                 <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                   <span className="relative z-10 bg-background px-2 text-muted-foreground">
                     Have an account?{" "}
-                    <a href="/login" className="underline hover:text-blue-500 underline-offset-4">
+                <a href={`/login?redirectTo=${redirectTo}`} className="underline hover:text-blue-500 underline-offset-4">
                       Login
                     </a>
                   </span>
