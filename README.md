@@ -1,4 +1,4 @@
-Nextjs App where Authentication is managed for all the supdomains and domains of kapil.app.
+Nextjs App where Authentication is managed for wildcard subdomains *.kapil.app.
 
 Uses:
 - BetterAuth
