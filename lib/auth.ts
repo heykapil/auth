@@ -80,7 +80,7 @@ export const auth = betterAuth({
            //    if (process.env.NODE_ENV === "development") {
            //      console.log("✨ Verification OTP: " + otp);
            //    } else {
-           //      const url = `https://auth.kapil.app/verify-email?email=${email}&otp=${otp}`;
+           //      const url = process.env.BETTER_AUTH_URL + `/api/auth/verify-email?email=${email}&otp=${otp}`;
            //      await sendVerificationLink(email, url, otp);
            //    }
            //  }

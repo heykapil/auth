@@ -11,11 +11,14 @@ export default async function Home({
 }) {
   const search = await searchParams;
   const redirectTo = search['redirectTo'] || '/profile';
-  const {data:session , error} = await betterFetch<Session>("/api/auth/get-session", {
+  const {data:session , error} = await betterFetch<Session>("/api/auth/get-session",{
     baseURL: process.env.BETTER_AUTH_URL,
-    headers: await headers(),
+    headers: await headers()
+  });
+  console.log({
+    session, error
   })
-  if (error && error?.status>0 || !session) {
+  if (!session) {
     redirect(`/login?redirectTo=${redirectTo}`)
   }
   else {
