@@ -36,10 +36,10 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-all text-primary items-center justify-center mx-auto",
+        "sticky top-0 z-50 w-full transition-all text-primary items-center justify-center mx-auto bg-background/10",
         isScrolled
-          ? "border-b backdrop-blur supports-[backdrop-filter]:bg-transparent/60"
-          : "bg-transparent border-b",
+          ? "border-b backdrop-blur-lg"
+          : "border-b backdrop-blur-lg",
       )}
     >
       <div className="container flex flex-row mx-auto h-16  items-center justify-between">
