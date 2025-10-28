@@ -61,15 +61,15 @@ export default function EditProfile({session, user}: Session) {
     }
 
     return (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center bg-white">
             <Button onClick={() => setOpen(true)}>Edit Profile</Button>
-            <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="max-w-md">
+            <Dialog open={open} onOpenChange={setOpen} >
+                <DialogContent className="max-w-md bg-white">
                     <DialogHeader>
                         <DialogTitle>Edit Profile</DialogTitle>
                     </DialogHeader>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 bg-background">
                             <div className="flex flex-col items-center gap-2">
                                 <Avatar className="w-20 h-20">
                                     <AvatarImage src={form.watch("image")} alt="Profile Image" />

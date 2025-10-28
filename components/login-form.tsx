@@ -1,12 +1,12 @@
 'use client'
 import { Button } from "@/components/ui/button"
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { signIn } from "@/lib/auth-client"
@@ -56,6 +56,9 @@ export function LoginForm() {
         setLoading(prev => ({ ...prev, [provider]: true }));
         try {
             await signIn.social({ provider, callbackURL });
+            const bc = new BroadcastChannel('better-auth-session')
+            bc.postMessage('refresh')
+            bc.close()
         } catch (error) {
             console.error(error);
           toast.error("Something went wrong!", {
@@ -71,6 +74,9 @@ export function LoginForm() {
         await signIn.passkey({
             fetchOptions: {
                 onSuccess() {
+                    const bc = new BroadcastChannel('better-auth-session');
+                    bc.postMessage('refresh');
+                    bc.close();
                     toast.success("Welcome back!", {description: "Login successful!"});
                     router.push(callbackURL);
                 },
@@ -94,8 +100,10 @@ export function LoginForm() {
             onSuccess: () => {
               toast.success("Login Successful!", {
                     description: `Welcome back!`,
-
                 })
+              const bc = new BroadcastChannel('better-auth-session');
+              bc.postMessage('refresh');
+              bc.close();
                 router.push(callbackURL);
             }
         }).finally(() => setLoading(prev => ({ ...prev, 'credentials': false })));
@@ -122,6 +130,9 @@ export function LoginForm() {
                 toast.success("Magic link sent!", {
                     description: `Magic link sent to ${email}!`,
                 });
+                const bc = new BroadcastChannel('better-auth-session');
+                bc.postMessage('refresh');
+                bc.close();
             }
         }).finally(() => setLoading(prev => ({ ...prev, 'magic': false })));
     }

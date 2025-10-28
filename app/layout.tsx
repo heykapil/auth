@@ -1,4 +1,5 @@
 import Header from "@/components/nav/navbar";
+import { SessionSync } from "@/components/nav/session-refetch";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
@@ -19,6 +20,7 @@ export default async function RootLayout({
       <body>
         <Suspense>
           <Header />
+          <SessionSync />
         </Suspense>
         <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
           {children}

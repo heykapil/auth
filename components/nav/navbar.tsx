@@ -187,8 +187,18 @@ export default function Header() {
   const handleAddPasskey = async () => {
     const toastId = toast.loading('Waiting for passkey prompt...')
     try {
-      await authClient.passkey.addPasskey()
-      toast.success('Passkey added successfully!', { id: toastId })
+      await authClient.passkey.addPasskey({
+        fetchOptions: {
+          onSuccess() {
+            toast.success(`Passkey added successfully!`, {
+              id: toastId
+            });
+           },
+           onError(context) {
+             toast.error('Something went wrong', { description: context.error?.message, id: toastId});
+           }
+         }
+       })
     } catch (error: any) {
       if (error.name === 'NotAllowedError') {
         toast.dismiss(toastId)
@@ -201,13 +211,15 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-100 backdrop-blur-lg bg-white/10">
       <div className="container mx-auto flex h-12 items-center justify-between px-3">
+        <div className='flex gap-4 items-center'>
         <img
           src="https://cdn.kapil.app/images/website/logos/k.png"
           alt="Logo"
           className="h-8 w-auto cursor-pointer"
           onClick={() => router.push('/')}
         />
-
+        <span className='animate-fade-left'>auth.kapil.app</span>
+        </div>
         {/* --- DESKTOP MENU --- */}
         <div className="hidden lg:flex items-center gap-x-8">
           {status === 'loading' && (

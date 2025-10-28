@@ -6,15 +6,14 @@ import {
 } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import { authClient, signOut } from "@/lib/auth-client";
 import { GetInitial } from "@/lib/get-initials";
 import { CheckCircle, CircleX, Key, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import EditProfile from "./edit-profile";
 import SessionsManager from "./sessions-manager";
-export function ClientProfile({ session, user, sessions }: { session:any, user:any, sessions: any }) {
-  const { toast } = useToast();
+export function ClientProfile({ session, user, sessions }: { session: any, user:any, sessions: any }) {
   const router = useRouter();
     return (
       <div>
@@ -63,7 +62,7 @@ export function ClientProfile({ session, user, sessions }: { session:any, user:a
                   {/* <ChangePasswordForm /> */}
                 </div>
                 <div className="flex justify-between">
-                  <Button variant="default"  onClick={async() => await AddPasskey(toast)}>
+                  <Button variant="default"  onClick={async() => await AddPasskey()}>
                     <Key className="w-4 h-4 mr-2" />
                     Add passkeys
                   </Button>
@@ -73,10 +72,8 @@ export function ClientProfile({ session, user, sessions }: { session:any, user:a
                   </Button> */}
               <Button variant="destructive" onClick={async () => {
                 await signOut();
-                toast({
-                  title: 'Logout successful!',
-                  description: 'Redirecting to login page...',
-                  variant: 'success'
+                toast.success('Logout successful!',{
+                  description: 'Redirecting to login page...'
                 });
                 router.push('/login');
               }}>
@@ -93,15 +90,15 @@ export function ClientProfile({ session, user, sessions }: { session:any, user:a
 }
 
 
-const AddPasskey = async (toast: any) => {
+const AddPasskey = async () => {
   try {
     await authClient.passkey.addPasskey({
       fetchOptions: {
         onSuccess() {
-          toast({title:`Passkey added successfully!`, variant: `success`});
+          toast.success(`Passkey added successfully!`);
          },
          onError(context) {
-           toast({ description: context.error?.message, variant: 'destructive' });
+           toast.error('Something went wrong', { description: context.error?.message});
          }
        }
      })

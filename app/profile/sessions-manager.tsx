@@ -2,12 +2,12 @@
 
 import { Button } from "@/components/ui/button"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
 } from "@/components/ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useToast } from "@/hooks/use-toast"
@@ -37,12 +37,12 @@ export default function SessionsManager({ sessions, session }:{ session: any, se
           Active sessions
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent className="sm:max-w-[800px] bg-white">
         <DialogHeader>
           <DialogTitle>Active Sessions</DialogTitle>
           <DialogDescription>View and manage your currently active sessions across devices.</DialogDescription>
         </DialogHeader>
-        <div className="max-h-[60vh] overflow-auto">
+        <div className="max-h-[60vh] overflow-auto bg-white">
           <Table>
             <TableHeader>
               <TableRow>
@@ -67,7 +67,8 @@ export default function SessionsManager({ sessions, session }:{ session: any, se
                   <TableCell className="hidden md:table-cell">{formatDate(item.createdAt)}</TableCell>
                   <TableCell className="text-right">
                     <Button
-                      variant="destructive"
+                      className='h-8'
+                      variant={'destructive'}
                       size="sm"
                       onClick={async () => await authClient.revokeSession({
                           token: item.token,
@@ -86,7 +87,6 @@ export default function SessionsManager({ sessions, session }:{ session: any, se
                           }
                       })}
                       disabled={item.ipAddress === session?.ipAddress || revokedStates[item.token] === true || revokingStates[item.token] === true}
-                      className="h-8"
                     >
                       <X className="h-4 w-4 mr-1" />
                       {revokedStates[item.token] ? `Revoked` : (revokingStates[item.token] ? 'Revoking...' : 'Revoke')}
