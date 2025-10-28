@@ -1,7 +1,7 @@
-
-
+import { Suspense } from "react"
 export default function NotFound() {
   return (
+    <Suspense>
     <div className="flex mt-16 w-full mx-auto justify-center p-2 max-w-sm flex-col gap-6">
      <h2 className="animate-fade-right text-2xl font-semibold">
        404 - Not Found!
@@ -18,5 +18,6 @@ export default function NotFound() {
        to home page.
      </p>
    </div>
+    </Suspense>
   )
 }

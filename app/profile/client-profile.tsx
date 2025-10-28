@@ -1,8 +1,8 @@
 'use client'
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
 } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ export function ClientProfile({ session, user, sessions }: { session:any, user:a
   const router = useRouter();
     return (
       <div>
-          <div className="w-full rounded-lg m-2 p-2 max-w-2xl space-y-6 mx-auto bg-neutral-50 dark:bg-neutral-950">
+          <div className="w-full rounded-lg m-2 p-2 max-w-2xl space-y-6 mx-auto bg-neutral-50">
                 <div>
                   <div className="text-2xl font-bold text-center">User Profile</div>
                 </div>
@@ -56,7 +56,7 @@ export function ClientProfile({ session, user, sessions }: { session:any, user:a
                         </Badge>
                       )}
                     </div>
-                    <p className="">Last login: <span className='text-muted-foreground text-pretty'>{new Date(session.createdAt).toLocaleDateString('en-IN', {month: 'long',day: 'numeric', year: 'numeric'} )}</span></p>
+                    <span>Last login: <span className='text-muted-foreground text-pretty'>{new Date(session.createdAt).toLocaleDateString('en-IN', {month: 'long',day: 'numeric', year: 'numeric'} )}</span></span>
                     {/* <p className="">IPAddress: <span className='text-muted-foreground text-pretty'>{session?.ipAddress}</span></p> */}
 
                   </div>

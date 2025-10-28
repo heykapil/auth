@@ -42,20 +42,22 @@ export const auth = betterAuth({
           clientId: process.env.GITHUB_CLIENT_ID as string,
           clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
         },
-        twitter: {
+      twitter: {
           clientId: process.env.TWITTER_CLIENT_ID as string,
           clientSecret: process.env.TWITTER_CLIENT_SECRET as string,
+          // scope: ['user.email']
         },
     },
+    trustedOrigins: ["http://localhost:3000", "*.kapil.app", "kapil.app"],
     advanced: {
       crossSubDomainCookies: {
         enabled: true,
         domain: process.env.NODE_ENV === 'production' ? 'kapil.app' : 'localhost',
       },
       defaultCookieAttributes: {
-          secure: process.env.NODE_ENV === 'production',
+          secure: process.env.NODE_ENV === 'production' ? true : false,
           httpOnly: true,
-          sameSite: "none", // Allows CORS-based cookie sharing across subdomains
+          sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax",
       },
       useSecureCookies: process.env.NODE_ENV === "production" ? true : false,
       cookiePrefix: "kapil.app"

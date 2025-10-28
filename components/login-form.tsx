@@ -1,292 +1,248 @@
 'use client'
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import {
-  Card,
-  CardContent, CardDescription,
-  CardHeader, CardTitle
-} from "@/components/ui/card"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
 } from "@/components/ui/form"
-import { useToast } from "@/hooks/use-toast"
+import { Input } from "@/components/ui/input"
 import { signIn } from "@/lib/auth-client"
 import { loginSchemaCredentials, loginSchemaMagicLink } from "@/lib/schema/login"
-import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { AtSign, EyeClosed, EyeIcon, Fingerprint, Github, UsersRoundIcon } from "lucide-react"
+import { Eye, EyeOff, Github, KeyIcon } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import { z } from "zod"
 import { Spinner } from "./spinner"
-import { Input } from "./ui/input"
+
+
+// Helper components for social icons to keep the main component cleaner
+const GoogleIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 48 48">
+  <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+  </svg>
+);
+
+const TwitterIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50">
+  <path d="M 6.9199219 6 L 21.136719 26.726562 L 6.2285156 44 L 9.40625 44 L 22.544922 28.777344 L 32.986328 44 L 43 44 L 28.123047 22.3125 L 42.203125 6 L 39.027344 6 L 26.716797 20.261719 L 16.933594 6 L 6.9199219 6 z"></path>
+  </svg>
+);
+
+
 export function LoginForm() {
     const searchParams = useSearchParams();
     const redirectTo = searchParams?.get("redirectTo") || '/profile';
-    const callbackURL = `/?redirectTo=`+ encodeURIComponent(redirectTo);
-    const { toast } = useToast();
+    const callbackURL = `/?redirectTo=` + encodeURIComponent(redirectTo);
     const router = useRouter();
-    const [loading, setLoading] = useState<Record<string, boolean>>({})
-    const [magicLink, setmagicLink] = useState<boolean>(false);
+    const [loading, setLoading] = useState<Record<string, boolean>>({});
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const schema = magicLink ? loginSchemaMagicLink : loginSchemaCredentials;
-    const form = useForm<z.infer<typeof schema>>({
-      resolver: zodResolver(schema)
-      }
-    )
+    const [loginMethod, setLoginMethod] = useState<'password' | 'magic'>('password');
+
+    const form = useForm<z.infer<typeof loginSchemaCredentials>>({
+        resolver: zodResolver(loginSchemaCredentials),
+        defaultValues: {
+            email: "",
+            password: ""
+        }
+    });
+
+    async function handleSocialLogin(provider: 'github' | 'google' | 'twitter') {
+        setLoading(prev => ({ ...prev, [provider]: true }));
+        try {
+            await signIn.social({ provider, callbackURL });
+        } catch (error) {
+            console.error(error);
+          toast.error("Something went wrong!", {
+            description: "Could not sign in with " + provider
+          });
+        } finally {
+            setLoading(prev => ({ ...prev, [provider]: false }));
+        }
+    }
+
     async function signInPasskey() {
-        setLoading(prev => ({...prev, 'passkey' :true}))
-      await signIn.passkey({
-        fetchOptions: {
-                  onRequest(){
-                    setLoading(prev => ({...prev, 'passkey' :true}))
-                  },
-                  onResponse(){
-                    setLoading(prev => ({...prev, 'passkey' :false}))
-                  },
-									onSuccess() {
-									 toast({
-                      description: "Login successful!",
-                      variant: "success",
-                      title: "Welcome back!"
+        setLoading(prev => ({ ...prev, 'passkey': true }))
+        await signIn.passkey({
+            fetchOptions: {
+                onSuccess() {
+                    toast.success("Welcome back!", {description: "Login successful!"});
+                    router.push(callbackURL);
+                },
+                onError(context) {
+                    toast.error("Something went wrong!", {
+                        description: context.error.message,
                     });
-										router.push(callbackURL);
-                    // router.refresh();
-									},
-									onError(context) {
-                    toast({
-                      description: context.error.message,
-                      variant: "destructive",
-                      title: "Something went wrong!"
-                    });
-									},
-								}})
-                  .then(()=> setLoading(prev => ({...prev, 'passkey' :false})))
-                  .catch((err)=> {
-                    setLoading(prev => ({...prev, 'passkey' :false}))
-                        toast({
-                          description: err.message,
-                          variant: "destructive",
-                          title: "Something went wrong!"
-                        })
-                      })
+                },
+            }
+        }).finally(() => setLoading(prev => ({ ...prev, 'passkey': false })));
     }
-  async function onSubmit(values: any) {
-    if (magicLink) {
-      setLoading(prev => ({...prev, 'magic' :true}))
-      await signIn.magicLink({ email: values.email, callbackURL: callbackURL },{
-        onRequest: () => {
-          setLoading(prev => ({...prev, 'magic' :true}))        },
-        onResponse: () => {
-          setLoading(prev => ({...prev, 'magic' : false}))        },
-        onError: (ctx) => {
-          toast({
-            description: ctx.error?.message,
-            variant: 'destructive',
-            title: 'Something went wrong!'
-          })
-        },
-        onSuccess: () => {
-          toast({
-            description: `Magic link sent to ${values?.email}!`,
-            variant: "success",
-            title: "Magic link sent!"
-          })
-        }
-      })
-    } else {
-      await signIn.email({ email: values.email, password: values.password, callbackURL: callbackURL },{
-      onRequest: () => {
-        setLoading(prev => ({...prev, 'credentials' :true}))      },
-      onResponse: () => {
-        setLoading(prev => ({...prev, 'credentials' :false}))				},
-			onError: (ctx) => {
-          toast({
-            description: ctx.error?.message,
-            variant: 'destructive',
-            title: 'Something went wrong!'
-          })
-        },
-        onSuccess: () => {
-          toast({
-            description: `Welcome back!`,
-            variant: "success",
-            title: "Login Successful!"
-          })
-        }
-      })
-      .then(()=> setLoading(prev => ({...prev, 'credentials' :false})))
+
+    async function onSubmitPassword(values: z.infer<typeof loginSchemaCredentials>) {
+        setLoading(prev => ({ ...prev, 'credentials': true }));
+        await signIn.email({ email: values.email, password: values.password, callbackURL: callbackURL }, {
+            onError: (ctx) => {
+                toast.error('Something went wrong!', {
+                    description: ctx.error?.message,
+                })
+            },
+            onSuccess: () => {
+              toast.success("Login Successful!", {
+                    description: `Welcome back!`,
+
+                })
+                router.push(callbackURL);
+            }
+        }).finally(() => setLoading(prev => ({ ...prev, 'credentials': false })));
     }
-  }
-  return (
-    <>
-    <Card className="w-2xl">
-      <CardHeader className="text-center">
-        <CardTitle className="text-xl">Welcome back!</CardTitle>
-        <CardDescription>
-          Sign into your account using your social account, email, or registered passkey!
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className={cn("flex flex-col gap-0")}>
-          <Accordion type="single" collapsible defaultValue="item-1" className="w-full space-y-0">
-            <AccordionItem value="item-1">
-              <AccordionTrigger>
-                <a className="bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 px-4 py-2 justify-center flex flex-row rounded-lg mx-auto items-center place-items-center w-full text-center">Social accounts
-                  <UsersRoundIcon className="w-4 h-4 mx-2" />
-                  </a>
-              </AccordionTrigger>
-              <AccordionContent className='mx-2'>
-                <div className="grid gap-6">
-                  <div className="flex flex-col gap-4">
-                      <Button variant="outline" onClick={async () => {
-                        setLoading(prev => ({...prev, 'github' :true}))
-                        await signIn.social({
-                          provider: 'github',
-                          callbackURL: callbackURL
-                        })
-                        setLoading(prev => ({...prev, 'github' :false}))                      }
-                      } className="w-full">
-                        {loading['github'] === true ? <Spinner className="w-4 h-4 aboslute" /> : (<span className="flex flex-row justify-center items-center"><Github className="w-4 h-4 mr-2" />
-                          Login with Github
-                        </span>)}
+
+    async function handleMagicLinkSubmit() {
+        const email = form.getValues('email');
+        const validation = loginSchemaMagicLink.safeParse({ email });
+
+        if (!validation.success) {
+            form.setError("email", { type: "manual", message: validation.error.issues[0].message });
+            return;
+        }
+        form.clearErrors("email");
+
+        setLoading(prev => ({ ...prev, 'magic': true }));
+        await signIn.magicLink({ email, callbackURL }, {
+            onError: (ctx) => {
+                toast.error('Something went wrong!', {
+                    description: ctx.error?.message,
+                });
+            },
+            onSuccess: () => {
+                toast.success("Magic link sent!", {
+                    description: `Magic link sent to ${email}!`,
+                });
+            }
+        }).finally(() => setLoading(prev => ({ ...prev, 'magic': false })));
+    }
+
+    const isAnyLoading = Object.values(loading).some(Boolean);
+
+    return (
+        <div className="flex flex-col justify-center items-center">
+          <div className="w-full max-w-md bg-amber-50/2 rounded-lg p-4 space-y-6">
+            <div className="text-center">
+              <h1 className="text-3xl text-gray-900">Welcome Back!</h1>
+              <span className="text-slate-500">Sign in to your account to continue your journey.<br/>Use social account or a saved passkey.</span>
+            </div>
+                  <div className="flex items-center justify-center space-x-4">
+                    <Button disabled={isAnyLoading} variant="secondary" className="w-10 h-10 hover:scale-105 transition-all duration-200 easy-in-out" onClick={() => handleSocialLogin('google')}>
+                        {loading['google'] ? <Spinner /> : <GoogleIcon />}
                     </Button>
-                      <Button variant="outline" className="w-full" onClick={async () => {
-                        setLoading(prev => ({...prev, 'twitter' :true}))
-                        await signIn.social({
-                          provider: 'twitter',
-                          callbackURL: callbackURL
-                        })
-                        setLoading(prev => ({...prev, 'twitter' :false}))
-                      }}>
-                        {loading['twitter'] === true ? <Spinner className="w-4 h-4 aboslute" /> : (
-                        <span className="flex flex-row justify-center items-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="mr-2" viewBox="0 0 50 50">
-                        <path fill="currentColor" d="M 5.9199219 6 L 20.582031 27.375 L 6.2304688 44 L 9.4101562 44 L 21.986328 29.421875 L 31.986328 44 L 44 44 L 28.681641 21.669922 L 42.199219 6 L 39.029297 6 L 27.275391 19.617188 L 17.933594 6 L 5.9199219 6 z M 9.7167969 8 L 16.880859 8 L 40.203125 42 L 33.039062 42 L 9.7167969 8 z"></path>
-                        </svg>
-                      Login with Twitter
-                      </span>)}
+                    <Button disabled={isAnyLoading} variant="secondary" className="w-10 h-10 hover:scale-105 transition-all duration-200 easy-in-out" onClick={() => handleSocialLogin('github')}>
+                        {loading['github'] ? <Spinner /> : <Github  />}
                     </Button>
-                      <Button variant="outline" onClick={async () => {
-                        setLoading(prev => ({ ...prev, 'google': true }));
-                        await signIn.social({
-                          provider: 'google',
-                          callbackURL: callbackURL
-                        });
-                        setLoading(prev => ({...prev, 'google' :false}))
-                      }} className="w-full">
-                      { loading['google'] === true ? <Spinner className="w-4 h-4 aboslute" /> : (
-                        <span className="flex flex-row justify-center items-center">
-                      <svg className='mr-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path
-                          d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                      Login with Google
-                      </span>)}
+                    <Button disabled={isAnyLoading} variant="secondary" className="w-10 h-10 hover:scale-105 transition-all duration-200 easy-in-out" onClick={() => handleSocialLogin('twitter')}>
+                        {loading['twitter'] ? <Spinner /> : <TwitterIcon />}
+                    </Button>
+                    <Button variant="secondary" className="w-10 h-10 hover:scale-105 transition-all duration-200 easy-in-out" onClick={signInPasskey} disabled={isAnyLoading}>
+                      {loading['passkey'] ? <Spinner /> : <KeyIcon />}
+                      <span className="sr-only">Saved passkey</span>
                     </Button>
                   </div>
+                <div className="relative flex items-center py-2">
+                    <div className="flex-grow border-t border-gray-200"></div>
+                    <span className="flex-shrink mx-4 text-xs text-gray-400 uppercase">Or sign in with email</span>
+                    <div className="flex-grow border-t border-gray-200"></div>
                 </div>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-2">
-              <AccordionTrigger><a className='bg-secondary  text-secondary-foreground shadow-sm hover:bg-secondary/80 px-4 py-2 justify-center flex flex-row rounded-lg mx-auto items-center place-items-center w-full text-center'>Login using email <AtSign className="w-4 h-4 ml-2" /></a> </AccordionTrigger>
-              <AccordionContent className='mx-2'>
+
                 <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Email</FormLabel>
-                     <FormControl>
-                    <Input
-                      id="email"
-                      type="email"
-                      // placeholder="hello@email.com"
-                      {...field}
-                    />
-                     </FormControl>
-                      <FormMessage />
-                      </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      // @ts-ignore
-                      name="password"
-                      render={({ field }) => (
-                      <FormItem>
-                      <FormLabel>
-                        <div className="flex flex-row justify-between">
-                        Password
-                        <a
-                          onClick={() => setmagicLink(!magicLink)}
-                          className="ml-auto text-sm p-0 m-0 hover:bg-none underline-offset-4 hover:underline"
-                        >
-                          {magicLink === true ? 'I know my password!' : 'Forgot my password?'}
-                        </a>
-                        </div>
-                      </FormLabel>
-                    <FormControl>
-                      <div className="flex flex-row items-center relative">
-                    <Input id="password" type={showPassword ? 'text' : 'password'}
-                    className="w-full"
-                    // placeholder="Enter password here.."
-                      disabled={magicLink}
-                      // hasError={!!fieldState.error}
-                      {...field}
-                    />
-                    <a className="absolute right-3 top-3 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
-                    {!showPassword ? <EyeIcon className="w-4 h-4" /> : <EyeClosed className="w-4 h-4" />}
-                    </a>
-                    </div>
-                      </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                    )}
-                      />
-                  <Button type="submit" className="w-full" disabled={loading['magic'] || loading['credentials']}>
-                    {(loading['credentials'] === true || loading['magic'] === true) ? (<Spinner className='absolute' /> ) :   (magicLink ? 'Send Magic Link' : 'Login')}
-                  </Button>
-                </form>
+                    <form onSubmit={form.handleSubmit(onSubmitPassword)} className="space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="text-base text-gray-700">Email Address</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="email"
+                                            placeholder="you@example.com"
+                                            {...field}
+                                            className="h-12"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        {loginMethod === 'password' && (
+                            <div className="space-y-4">
+                                <FormField
+                                    control={form.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <div className="flex justify-between items-center">
+                                                <FormLabel className="text-base text-gray-700">Password</FormLabel>
+                                                <button type="button" onClick={() => setLoginMethod('magic')} className=" text-base font-semibold text-indigo-600 hover:text-indigo-500">
+                                                    Forgot password?
+                                                </button>
+                                            </div>
+                                            <FormControl>
+                                                <div className="relative">
+                                                    <Input
+                                                        id="password"
+                                                        type={showPassword ? 'text' : 'password'}
+                                                        placeholder="••••••••"
+                                                        {...field}
+                                                        className="h-12 pr-10"
+                                                    />
+                                                    <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" onClick={() => setShowPassword(!showPassword)}>
+                                                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                                    </button>
+                                                </div>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <Button type="submit" className="w-full h-12 text-base bg-indigo-500 text-white hover:scale-101 transition-all duration-200 easy-in-out" disabled={loading['credentials']}>
+                                    {loading['credentials'] ? <Spinner /> : 'Sign In'}
+                                </Button>
+                            </div>
+                        )}
+
+                        {loginMethod === 'magic' && (
+                             <div className="space-y-6">
+                                <div className="text-base text-center text-gray-600 mt-10">
+                                     We&apos;ll email you a magic link for a password-free sign in. <button type="button" onClick={() => setLoginMethod('password')} className="font-semibold text-indigo-600 hover:text-indigo-500">Sign in with password instead.</button>
+                                </div>
+                                <Button type="button" onClick={handleMagicLinkSubmit} className="w-full h-12 bg-indigo-500 text-white hover:scale-101 transition-all duration-200 easy-in-out" disabled={loading['magic']}>
+                                    {loading['magic'] ? <Spinner /> : 'Send Magic Link'}
+                                </Button>
+                            </div>
+                        )}
+                    </form>
                 </Form>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-        <Button variant='secondary' className='flex flex-row mx-auto w-full  text-sm font-medium items-center mt-1.5'  onClick={async ()=>await signInPasskey()}>
-          {loading['passkey'] === true ? (<Spinner className="w-4 h-4 absolute" />): (<span className="flex flex-row mx-auto">Login using passkey
-            <Fingerprint className="w-4 h-4 ml-2" /></span>)}</Button>
-        <div className="flex flex-col gap-4 mt-6">
-            <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-              <span className="relative z-10 bg-background px-2 text-muted-foreground">
-                Create an account?{" "}
-                <a href={`/signup?redirectTo=${redirectTo}`} className="underline hover:text-blue-500 underline-offset-4">
-                  Sign up
-                </a>
-              </span>
+
+                {/*<div className="relative flex items-center py-2">
+                    <div className="flex-grow border-t border-gray-200"></div>
+                    <span className="flex-shrink mx-4 text-xs text-gray-400 uppercase">Otherwise</span>
+                    <div className="flex-grow border-t border-gray-200"></div>
+                </div>*/}
+
+
+                <div className="text-center pt-6">
+                <span className=" text-slate-500">
+                    Don&apos;t have an account?{" "}
+                    <a href={`/signup?redirectTo=${redirectTo}`} className="font-semibold text-indigo-600 hover:text-indigo-500 underline-offset-4 hover:underline">
+                        Sign up
+                    </a>
+                </span>
+                </div>
             </div>
-          </div>
-    </CardContent>
-    </Card>
-    <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-      By clicking continue, you agree to our <a href="//kapil.app/terms">Terms of Service</a>{" "}
-      and <a href="//kapil.app/privacy">Privacy Policy</a>.
-    </div>
-    </>
-  )
-    }
+        </div>
+    )
+}

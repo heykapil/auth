@@ -1,13 +1,12 @@
-import { Session } from "@/lib/auth"
-import { betterFetch } from "@better-fetch/fetch"
-import { headers } from "next/headers"
-import { redirect } from "next/navigation"
+import { Session } from "@/lib/auth";
+import { betterFetch } from "@better-fetch/fetch";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default async function Home({
-  params,searchParams
+   searchParams
 }: {
- params: Promise <{params:string}>
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+  searchParams: Promise<{ [key: string]: string | undefined }>
 }) {
   const search = await searchParams;
   const redirectTo = search['redirectTo'] || '/profile';
@@ -15,15 +14,10 @@ export default async function Home({
     baseURL: process.env.BETTER_AUTH_URL,
     headers: await headers()
   });
-  console.log({
-    session, error
-  })
-  if (!session) {
+  if(!session || !!error){
     redirect(`/login?redirectTo=${redirectTo}`)
+  } else {
+    redirect(redirectTo)
   }
-  else {
-    redirect(decodeURI(redirectTo as string))
-  }
-
   return <div>Redirecting...</div>
 }
