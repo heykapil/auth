@@ -175,10 +175,10 @@ export function SignUpForm() {
                   Login
                 </a>
               </span>
-              <div className="text-balance mt-4 text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
+              {/*<div className="text-balance mt-4 text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
                 By clicking continue, you agree to our <a href="https://kapil.app/terms">Terms of Service</a>{" "}
                 and <a href="https://kapil.app/privacy">Privacy Policy</a>.
-              </div>
+              </div>*/}
             </div>
     </div>
     </div>

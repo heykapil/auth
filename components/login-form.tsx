@@ -1,12 +1,12 @@
 'use client'
 import { Button } from "@/components/ui/button"
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { signIn } from "@/lib/auth-client"
@@ -141,7 +141,7 @@ export function LoginForm() {
 
     return (
         <div className="flex flex-col justify-center items-center">
-          <div className="w-full max-w-md bg-amber-50/2 rounded-lg p-4 space-y-6">
+          <div className="w-full max-w-md rounded-lg p-4 space-y-6">
             <div className="text-center">
               <h1 className="text-3xl text-gray-900">Welcome Back!</h1>
               <span className="text-slate-500">Sign in to your account to continue your journey.<br/>Use social account or a saved passkey.</span>

@@ -10,26 +10,30 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { authClient } from "@/lib/auth-client";
-import { parseUserAgent } from "@/lib/user-agent";
+import { Passkey } from "better-auth/plugins/passkey";
 import { Shield, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Modal } from "./modal";
 
-export default function SessionsManager({
-  sessions,
-  session,
-}: {
-  session: any;
-  sessions: any[];
-}) {
+export function PasskeyManager() {
   const [open, setOpen] = useState(false);
+  const [passkeys, setPasskeys] = useState<Passkey[] | null>(null);
   const [revokingStates, setRevokingStates] = useState<Record<string, boolean>>(
     {},
   );
   const [revokedStates, setRevokedStates] = useState<Record<string, boolean>>(
     {},
   );
+
+  useEffect(() => {
+    (async function setPasskey() {
+      const { data, error } = await authClient.passkey.listUserPasskeys();
+      if (!error) {
+        setPasskeys(data);
+      }
+    })();
+  }, []);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -43,17 +47,17 @@ export default function SessionsManager({
     <>
       <Button className="gap-2" onClick={() => setOpen(true)}>
         <Shield className="h-4 w-4 mr-2" />
-        Active sessions
+        Active passkeys
       </Button>
 
       <Modal
         isOpen={open}
         onClose={() => setOpen(false)}
-        title="Active Sessions"
+        title="Active passkeys"
       >
         <div className="mt-4">
           <p className="text-sm text-muted-foreground mb-4">
-            View and manage your currently active sessions across devices.
+            View and manage your currently active passkeys across devices.
           </p>
 
           <div className="max-h-[60vh] overflow-auto">
@@ -69,46 +73,51 @@ export default function SessionsManager({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sessions.map((item: any) => (
+                {!passkeys ||
+                  (passkeys.length === 0 && (
+                    <TableRow>
+                      <TableCell
+                        colSpan={4}
+                        className="text-center py-6 text-muted-foreground"
+                      >
+                        No active passkeys found
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                {passkeys?.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">
-                      {parseUserAgent(item.userAgent)}
-                      {session?.ipAddress === item.ipAddress && (
-                        <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-                          Current
-                        </span>
-                      )}
+                      {item.deviceType}
                     </TableCell>
-                    <TableCell>{item.ipAddress}</TableCell>
+                    <TableCell>{item?.name || "No name"}</TableCell>
                     <TableCell className="hidden md:table-cell">
-                      {formatDate(item.createdAt)}
+                      {formatDate(item?.createdAt?.toISOString())}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button
-                        className="h-8"
-                        variant={"destructive"}
+                        className="h-8 text-red-600"
                         size="sm"
                         onClick={async () =>
-                          await authClient.revokeSession({
-                            token: item.token,
+                          await authClient.passkey.deletePasskey({
+                            id: item.id,
                             fetchOptions: {
                               onRequest() {
                                 setRevokingStates((prev) => ({
                                   ...prev,
-                                  [item.token]: true,
+                                  [item.id]: true,
                                 }));
                               },
                               onSuccess() {
                                 setRevokedStates((prev) => ({
                                   ...prev,
-                                  [item.token]: true,
+                                  [item.id]: true,
                                 }));
-                                toast.success(`Session revoked!`);
+                                toast.success(`Passkey removed!`);
                               },
                               onError(context) {
                                 setRevokingStates((prev) => ({
                                   ...prev,
-                                  [item.token]: false,
+                                  [item.id]: false,
                                 }));
                                 toast.error("Error", {
                                   description: context.error?.message,
@@ -117,32 +126,17 @@ export default function SessionsManager({
                             },
                           })
                         }
-                        disabled={
-                          item.ipAddress === session?.ipAddress ||
-                          revokedStates[item.token] === true ||
-                          revokingStates[item.token] === true
-                        }
                       >
                         <X className="h-4 w-4 mr-1" />
-                        {revokedStates[item.token]
-                          ? `Revoked`
-                          : revokingStates[item.token]
-                            ? "Revoking..."
-                            : "Revoke"}
+                        {revokedStates[item.id]
+                          ? `Removed`
+                          : revokingStates[item.id]
+                            ? "Removing..."
+                            : "Remove"}
                       </Button>
                     </TableCell>
                   </TableRow>
                 ))}
-                {sessions.length === 0 && (
-                  <TableRow>
-                    <TableCell
-                      colSpan={4}
-                      className="text-center py-6 text-muted-foreground"
-                    >
-                      No active sessions found
-                    </TableCell>
-                  </TableRow>
-                )}
               </TableBody>
             </Table>
           </div>
