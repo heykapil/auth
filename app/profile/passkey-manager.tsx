@@ -10,9 +10,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { authClient } from "@/lib/auth-client";
+import { snowflake } from "@/lib/snowflake";
 import { KeyIcon } from "@heroicons/react/20/solid";
 import { Passkey } from "better-auth/plugins/passkey";
-import { randomUUID } from "crypto";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -54,9 +54,8 @@ export function PasskeyManager() {
       <Button
         className="gap-2"
         onClick={async () => {
-          const rand = randomUUID();
           await authClient.passkey.addPasskey({
-            name: rand,
+            name: snowflake.generate().toString(),
             fetchOptions: {
               onSuccess() {
                 toast.success(`Passkey added!`);
