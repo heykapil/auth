@@ -10,8 +10,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { authClient } from "@/lib/auth-client";
+import { KeyIcon } from "@heroicons/react/20/solid";
 import { Passkey } from "better-auth/plugins/passkey";
-import { Shield, X } from "lucide-react";
+import { randomUUID } from "crypto";
+import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Modal } from "./modal";
@@ -46,10 +48,31 @@ export function PasskeyManager() {
   return (
     <>
       <Button className="gap-2" onClick={() => setOpen(true)}>
-        <Shield className="h-4 w-4 mr-2" />
+        <KeyIcon className="h-4 w-4 mr-2" />
         Active passkeys
       </Button>
-
+      <Button
+        className="gap-2"
+        onClick={async () => {
+          const rand = randomUUID();
+          await authClient.passkey.addPasskey({
+            name: rand,
+            fetchOptions: {
+              onSuccess() {
+                toast.success(`Passkey added!`);
+              },
+              onError(context) {
+                toast.error("Error", {
+                  description: context.error?.message,
+                });
+              },
+            },
+          });
+        }}
+      >
+        <KeyIcon className="h-4 w-4 mr-2" />
+        Add passkeys
+      </Button>
       <Modal
         isOpen={open}
         onClose={() => setOpen(false)}
@@ -64,10 +87,10 @@ export function PasskeyManager() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Device / Browser</TableHead>
-                  <TableHead>IP Address</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Name</TableHead>
                   <TableHead className="hidden md:table-cell">
-                    Last Active
+                    Created at
                   </TableHead>
                   <TableHead className="text-right">Action</TableHead>
                 </TableRow>
@@ -139,12 +162,6 @@ export function PasskeyManager() {
                 ))}
               </TableBody>
             </Table>
-          </div>
-
-          <div className="mt-4">
-            <p className="text-sm text-muted-foreground">
-              The device and browser detection might not be 100% accurate.
-            </p>
           </div>
         </div>
       </Modal>

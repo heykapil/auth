@@ -137,8 +137,8 @@ export function ClientProfile({
             Sessions & Passkeys
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <SessionsManager session={session} sessions={sessions} />
             <PasskeyManager />
+            <SessionsManager session={session} sessions={sessions} />
           </div>
         </div>
 
@@ -149,7 +149,7 @@ export function ClientProfile({
           </h3>
           <div className="flex justify-between items-center p-4 bg-red-50 rounded-lg">
             <div>
-              <p className="font-medium">Delete Account</p>
+              <p className="font-medium text-base">Delete Account</p>
               <p className="text-sm text-muted-foreground">
                 Permanently delete your account and all data.
               </p>

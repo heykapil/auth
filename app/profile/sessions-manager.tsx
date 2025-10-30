@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/table";
 import { authClient } from "@/lib/auth-client";
 import { parseUserAgent } from "@/lib/user-agent";
-import { Shield, X } from "lucide-react";
+import { UserGroupIcon } from "@heroicons/react/24/outline";
+import { X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Modal } from "./modal";
@@ -42,7 +43,7 @@ export default function SessionsManager({
   return (
     <>
       <Button className="gap-2" onClick={() => setOpen(true)}>
-        <Shield className="h-4 w-4 mr-2" />
+        <UserGroupIcon className="h-4 w-4 mr-2" />
         Active sessions
       </Button>
 
