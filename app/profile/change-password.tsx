@@ -101,15 +101,18 @@ export function ChangePassword() {
           <div className="mt-6 flex justify-between">
             <Button
               type="button"
-              variant="outline"
               onClick={() => setIsOpen(false)}
               disabled={isLoading}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="bg-blue-600 text-white"
+            >
               {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              Update Password
+              Change Password
             </Button>
           </div>
         </form>

@@ -16,7 +16,6 @@ import {
 import { useRouter } from "next/navigation";
 import { Fragment, useState } from "react";
 import { toast } from "sonner";
-import { ChangeEmail } from "./change-email";
 import EditProfile from "./edit-profile";
 
 import {
@@ -28,6 +27,7 @@ import {
 } from "@headlessui/react";
 import { ChangePassword } from "./change-password";
 import { PasskeyManager } from "./passkey-manager";
+import { ResetPassword } from "./ResetPassword";
 import { SendVerificationEmail } from "./send-verification-email";
 import SessionsManager from "./sessions-manager";
 
@@ -204,7 +204,7 @@ function EmailManagement({ user }: { user: any }) {
         <div className="flex space-x-2 mt-4 sm:mt-0">
           {!user.emailVerified && <SendVerificationEmail user={user} />}
           <div className="flex items-center">
-            <ChangeEmail user={user} />
+            <ResetPassword user={user} />
             <ChangePassword />
           </div>
         </div>
@@ -280,7 +280,7 @@ function AccountLinking({ accounts }: { accounts: Accounts[] }) {
                   {isLinking === provider.id ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    <LinkIcon className="w-3 h-3 mr-1" />
+                    <LinkIcon className="w-3 h-3 mr-1 mb-1" />
                   )}
                   Link
                 </Button>
@@ -316,7 +316,7 @@ function DeleteAccountModal() {
           onSuccess() {
             toast.success("Kindly check your email.");
             setIsOpen(false);
-            router.push("/"); // Redirect to homepage
+            router.push("/logout"); // Redirect to homepage
           },
           onError(context) {
             toast.error("Failed to delete account", {
@@ -406,6 +406,7 @@ function DeleteAccountModal() {
                     </Button>
                     <Button
                       type="button"
+                      className="bg-red-600 text-white"
                       variant="destructive"
                       onClick={handleDelete}
                       disabled={isLoading || confirmText !== confirmationString}

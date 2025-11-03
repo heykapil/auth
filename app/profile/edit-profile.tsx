@@ -134,7 +134,11 @@ export default function EditProfile({ session, user }: Session) {
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="bg-blue-600 text-white hover:scale-101 duration-300 ease-in-out text-base"
+                disabled={isLoading}
+              >
                 {isLoading ? `Saving...` : `Save`}
               </Button>
             </form>

@@ -86,7 +86,7 @@ export default function SessionsManager({
                     </TableCell>
                     <TableCell className="text-right">
                       <Button
-                        className="h-8"
+                        className="h-8 bg-red-600 text-white"
                         variant={"destructive"}
                         size="sm"
                         onClick={async () =>

@@ -117,7 +117,7 @@ export function PasskeyManager() {
                     </TableCell>
                     <TableCell className="text-right">
                       <Button
-                        className="h-8 text-red-600"
+                        className="h-8 bg-red-600 text-white"
                         size="sm"
                         onClick={async () =>
                           await authClient.passkey.deletePasskey({
