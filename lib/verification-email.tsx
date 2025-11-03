@@ -3,6 +3,7 @@ import {
   Body,
   Button,
   Container,
+  Font,
   Head,
   Heading,
   Hr,
@@ -15,15 +16,21 @@ import {
 } from "@react-email/components";
 
 interface VerificationEmailProps {
-  url?: string;
+  url: string;
 }
 
 export const VerificationEmail = ({ url }: VerificationEmailProps) => (
   <Html>
     <Head>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Linden+Hill&display=swap"
-        rel="stylesheet"
+      <Font
+        fontFamily="Linden Hill"
+        fallbackFontFamily="Georgia"
+        webFont={{
+          url: "https://fonts.gstatic.com/s/lindenhill/v21/j_u-06m3a0I_bYd1i_7a1i8.woff2",
+          format: "woff2",
+        }}
+        fontWeight={400}
+        fontStyle="normal"
       />
     </Head>
     <Preview>Verify your email address</Preview>
