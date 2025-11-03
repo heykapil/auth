@@ -22,6 +22,13 @@ export const auth = betterAuth({
     deleteUser: {
       enabled: true,
       deleteTokenExpiresIn: 10 * 60, // 10 minutes
+      // beforeDelete: async (user) => {
+      //   if (user?.username === "admin") {
+      //     throw new APIError("BAD_REQUEST", {
+      //       message: "Can not delete admin user",
+      //     });
+      //   }
+      // },
       sendDeleteAccountVerification: async ({ user, url }) => {
         if (process.env.NODE_ENV === "development") {
           console.log("✨ Delete user link: " + url);

@@ -54,9 +54,9 @@ export function ClientProfile({
   const router = useRouter();
 
   // Check if the user has a password provider
-  const hasPasswordProvider = accounts?.some(
-    (acc) => acc?.providerId === "credential",
-  );
+  // const hasPasswordProvider = accounts?.some(
+  //   (acc) => acc?.providerId === "credential",
+  // );
 
   return (
     <div>
@@ -119,7 +119,7 @@ export function ClientProfile({
         </div>
 
         {/* EMAIL MANAGEMENT */}
-        {hasPasswordProvider && <EmailManagement user={user} />}
+        {user?.emailVerified && <EmailManagement user={user} />}
 
         {/* SECURITY & ACCOUNT SETTINGS */}
         <div className="space-y-6">
