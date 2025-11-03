@@ -1,165 +1,163 @@
 import { sendEmail } from "@/lib/email";
 import {
-    Body,
-    Container,
-    Head,
-    Heading,
-    Html,
-    Img,
-    Link,
-    Preview,
-    Text,
-} from '@react-email/components';
+  Body,
+  Button,
+  Container,
+  Head,
+  Heading,
+  Hr,
+  Html,
+  Img,
+  Link,
+  Preview,
+  Section,
+  Text,
+} from "@react-email/components";
 
 interface VerificationEmailProps {
   url?: string;
-  token?: string;
 }
 
-export const VerificationEmail = ({
-  url, token
-}: VerificationEmailProps) => (
+export const VerificationEmail = ({ url }: VerificationEmailProps) => (
   <Html>
-    <Head />
+    <Head>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Linden+Hill&display=swap"
+        rel="stylesheet"
+      />
+    </Head>
+    <Preview>Verify your email address</Preview>
     <Body style={main}>
-      <Preview>Verify your account</Preview>
       <Container style={container}>
-        <Heading style={h1}>Verify your account</Heading>
-        <Link
-          href={url}
-          target="_blank"
-          style={{
-            ...link,
-            display: 'block',
-            marginBottom: '16px',
-          }}
-        >
-          Click here to verify your account with this link
-        </Link>
-        <Text style={{ ...text, marginBottom: '14px' }}>
-          Or, copy and paste this url in your browser:
-          <Link
-            href={url}
-            target="_blank"
-            style={{
-              ...link,
-              display: 'block',
-              marginBottom: '16px',
-            }}
-          > here
-          </Link>
-        </Text>
-        <code style={code}>{url}</code>
-        <Text
-          style={{
-            ...text,
-            color: '#ababab',
-            marginTop: '14px',
-            marginBottom: '16px',
-          }}
-        >
-          This verification link is valid for 10 mins.
-        </Text>
-        <Text
-          style={{
-            ...text,
-            color: '#ababab',
-            marginTop: '12px',
-            marginBottom: '38px',
-          }}
-        >
-         <strong>Note:</strong> This email was sent to you because someone used this email address to create an account on auth.kapil.app. If you didn&apos;t try to create an account, you can safely ignore this email.
-        </Text>
         <Img
           src={`https://cf.kapil.app/images/website/favicons/android-icon-192x192.png`}
-          width="32"
-          height="32"
+          width="48"
+          height="48"
           alt="Kapil Chaudhary"
+          style={logo}
         />
+        <Heading style={heading}>Verify Your Email Address</Heading>
+        <Section style={body}>
+          <Text style={paragraph}>
+            Welcome! We're excited to have you on board. To complete your
+            registration, please verify your email address by clicking the
+            button below.
+          </Text>
+          <Button style={button} href={url}>
+            Verify Email
+          </Button>
+          <Text style={paragraph}>
+            If the button above doesn't work, you can copy and paste the
+            following link into your browser:
+          </Text>
+          <Link href={url} style={link}>
+            {url}
+          </Link>
+          <Hr style={hr} />
+          <Text style={paragraph}>
+            This verification link is valid for <strong>10 minutes</strong>.
+          </Text>
+          <Text style={paragraph}>
+            <strong>Note:</strong> This email was sent because an account was
+            created on auth.kapil.app with this address. If you didn't create an
+            account, you can safely ignore this email.
+          </Text>
+        </Section>
+        <Text style={paragraph}>
+          Best,
+          <br />- The kapil.app Team
+        </Text>
+        <Hr style={hr} />
         <Text style={footer}>
-          <Link
-            href="https://kapil.app"
-            target="_blank"
-            style={{ ...link, color: '#898989' }}
-          >
+          <Link href="https://kapil.app" target="_blank" style={footerLink}>
             kapil.app
           </Link>
-          , Kapil Chaudhary
-          <br />
+          , by Kapil Chaudhary
         </Text>
       </Container>
     </Body>
   </Html>
 );
 
+export async function sendVerificationLink(email: string, url: string) {
+  try {
+    await sendEmail(
+      email,
+      "Verify your email address",
+      <VerificationEmail url={url} />,
+    );
+  } catch (error) {
+    console.error("Failed to send verification email:", error);
+    // Optionally rethrow or handle the error as needed
+    throw new Error("Failed to send verification email.");
+  }
+}
 
 const main = {
-  backgroundColor: '#ffffff',
+  backgroundColor: "#f6f9fc",
+  fontFamily: "'Linden Hill', serif",
+  color: "#333333",
 };
 
 const container = {
-  paddingLeft: '12px',
-  paddingRight: '12px',
-  margin: '0 auto',
+  backgroundColor: "#ffffff",
+  margin: "0 auto",
+  padding: "20px 0 48px",
+  marginBottom: "64px",
+  border: "1px solid #e6ebf1",
+  borderRadius: "8px",
 };
 
-const h1 = {
-  color: '#333',
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-  fontSize: '24px',
-  fontWeight: 'bold',
-  margin: '40px 0',
-  padding: '0',
+const logo = {
+  margin: "0 auto",
+};
+
+const heading = {
+  fontSize: "28px",
+  fontWeight: "bold",
+  textAlign: "center" as const,
+  margin: "30px 0",
+};
+
+const body = {
+  padding: "0 40px",
+};
+
+const paragraph = {
+  fontSize: "16px",
+  lineHeight: "26px",
+};
+
+const button = {
+  backgroundColor: "#2754C5",
+  borderRadius: "6px",
+  color: "#fff",
+  fontSize: "16px",
+  fontWeight: "bold",
+  textDecoration: "none",
+  textAlign: "center" as const,
+  display: "block",
+  width: "100%",
+  padding: "12px",
 };
 
 const link = {
-  color: '#2754C5',
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-  fontSize: '14px',
-  textDecoration: 'underline',
+  color: "#2754C5",
+  wordBreak: "break-all" as const,
 };
 
-const text = {
-  color: '#333',
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-  fontSize: '14px',
-  margin: '24px 0',
+const hr = {
+  borderColor: "#e6ebf1",
+  margin: "20px 0",
 };
 
 const footer = {
-  color: '#898989',
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-  fontSize: '12px',
-  lineHeight: '22px',
-  marginTop: '12px',
-  marginBottom: '24px',
+  color: "#8898aa",
+  fontSize: "12px",
+  textAlign: "center" as const,
 };
 
-const code = {
-  display: 'inline-block',
-  padding: '16px 4.5%',
-  width: '90.5%',
-  backgroundColor: '#f4f4f4',
-  borderRadius: '5px',
-  border: '1px solid #eee',
-  color: '#333',
+const footerLink = {
+  color: "#8898aa",
+  textDecoration: "underline",
 };
-
-export async function sendVerificationLink(email: string, url: string, token: string) {
-  try {
-    const res = await sendEmail(
-      email,
-      "Verify your email!",
-      <>
-        <VerificationEmail url={url} token={token} />
-      </>,
-    );
-    return res;
-  } catch (error) {
-    return error;
-  }
-}

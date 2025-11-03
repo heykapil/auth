@@ -1,26 +1,26 @@
 import { sendEmail } from "@/lib/email";
 import {
-  Body,
-  Button,
-  Container,
-  Font,
-  Head,
-  Heading,
-  Hr,
-  Html,
-  Img,
-  Link,
-  Preview,
-  Section,
-  Text,
+    Body,
+    Container,
+    Font,
+    Head,
+    Heading,
+    Hr,
+    Html,
+    Img,
+    Link,
+    Preview,
+    Section,
+    Text,
 } from "@react-email/components";
 
-interface MagicLinkEmailProps {
-  url: string;
+interface PasswordResetSuccessEmailProps {
   email: string;
 }
 
-const MagicLinkEmail = ({ url, email }: MagicLinkEmailProps) => {
+const PasswordResetSuccessEmail = ({
+  email,
+}: PasswordResetSuccessEmailProps) => {
   return (
     <Html>
       <Head>
@@ -35,7 +35,7 @@ const MagicLinkEmail = ({ url, email }: MagicLinkEmailProps) => {
           fontStyle="normal"
         />
       </Head>
-      <Preview>Log in to kapil.app</Preview>
+      <Preview>Your password has been reset successfully</Preview>
       <Body style={main}>
         <Container style={container}>
           <Img
@@ -45,21 +45,15 @@ const MagicLinkEmail = ({ url, email }: MagicLinkEmailProps) => {
             alt="kapil.app"
             style={logo}
           />
-          <Heading style={heading}>Your Magic Link</Heading>
+          <Heading style={heading}>Password Reset Successful</Heading>
           <Section style={body}>
             <Text style={paragraph}>
-              Click the button below to securely sign in to your kapil.app
-              account.
-            </Text>
-            <Button style={button} href={url}>
-              Sign In
-            </Button>
-            <Text style={paragraph}>
-              This magic link was requested for <strong>{email}</strong> and is
-              valid for <strong>10 minutes</strong>.
+              The password for your account ({email}) has been successfully
+              reset.
             </Text>
             <Text style={paragraph}>
-              If you did not request this, you can safely ignore this email.
+              If you did not initiate this change, please contact our support
+              team immediately to secure your account.
             </Text>
           </Section>
           <Text style={paragraph}>
@@ -79,16 +73,16 @@ const MagicLinkEmail = ({ url, email }: MagicLinkEmailProps) => {
   );
 };
 
-export async function sendMagicLink(email: string, url: string) {
+export async function sendPasswordResetSuccessEmail(email: string) {
   try {
     await sendEmail(
       email,
-      "Your Magic Link for kapil.app",
-      <MagicLinkEmail email={email} url={url} />,
+      "Your Password Has Been Reset",
+      <PasswordResetSuccessEmail email={email} />,
     );
   } catch (error) {
-    console.error("Failed to send magic link email:", error);
-    throw new Error("Failed to send magic link email.");
+    console.error("Failed to send password reset success email:", error);
+    throw new Error("Failed to send password reset success email.");
   }
 }
 
@@ -127,20 +121,6 @@ const paragraph = {
   fontSize: "16px",
   lineHeight: "26px",
   textAlign: "center" as const,
-};
-
-const button = {
-  backgroundColor: "#2754C5",
-  borderRadius: "6px",
-  color: "#fff",
-  fontSize: "16px",
-  fontWeight: "bold",
-  textDecoration: "none",
-  textAlign: "center" as const,
-  display: "block",
-  width: "100%",
-  padding: "12px",
-  margin: "24px 0",
 };
 
 const hr = {
