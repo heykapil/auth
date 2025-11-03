@@ -1,26 +1,39 @@
-@import 'tailwindcss';
-@import 'tailwindcss-animated';
+@import "tailwindcss";
+@import "tailwindcss-animated";
 @layer base {
   /* FONT DECLARATIONS */
   @font-face {
-    font-family: 'linden hill';
-    src: url("/fonts/LindenHill-Regular.woff2") format("woff2"),
-         url("/fonts/LindenHill-Regular.woff") format("woff");
+    font-family: "linden hill";
+    src:
+      url("/fonts/LindenHill-Regular.woff2") format("woff2"),
+      url("/fonts/LindenHill-Regular.woff") format("woff");
     font-style: normal;
     font-weight: 400;
+    font-display: swap;
   }
   @font-face {
-    font-family: 'linden hill';
-    src: url("/fonts/LindenHill-Italic.woff2") format("woff2"),
-         url("/fonts/LindenHill-Italic.woff") format("woff");
+    font-family: "linden hill";
+    src:
+      url("/fonts/LindenHill-Italic.woff2") format("woff2"),
+      url("/fonts/LindenHill-Italic.woff") format("woff");
     font-style: italic;
     font-weight: 400;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Adjusted Georgia Fallback";
+    src: local(Georgia);
+    size-adjust: 83%;
+    ascent-override: normal;
+    descent-override: normal;
+    line-gap-override: normal;
   }
 
   /* Redefine CSS variables for use in tailwind.config.js or here */
   :root {
-    --font-serif: "Linden Hill", serif;
-    --font-sans: "Linden Hill", sans-serif;
+    --font-serif: "Linden Hill", "Adjusted Georgia Fallback", serif;
+    --font-sans: "Linden Hill", "Adjusted Georgia Fallback", sans-serif;
     --color-primary: #171717;
     --color-query-0: #b1b960;
     --color-query-1: #c2e6d3;
@@ -32,11 +45,13 @@
     --tint: 300;
     --light: 0%;
     --saturation: 100%;
-    --color-background: #FAF9F6;
+    --color-background: #faf9f6;
     --color-lightest-grey: rgb(245, 245, 245);
     --color-lightest-grey: hsl(var(--tint), 0%, 88%);
     --symbol-content: "❧";
-    --shadow-paper: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12), 0 4px 4px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.12), 0 16px 16px rgba(0, 0, 0, 0.12);
+    --shadow-paper: 0 1px 1px rgba(0, 0, 0, 0.12),
+      0 2px 2px rgba(0, 0, 0, 0.12), 0 4px 4px rgba(0, 0, 0, 0.12),
+      0 8px 8px rgba(0, 0, 0, 0.12), 0 16px 16px rgba(0, 0, 0, 0.12);
     --shadow-main: var(--shadow-paper);
     --shadow-paper: none;
     --shadow-main: none;
@@ -48,7 +63,7 @@
     --color-darkest-grey: #999;
     --font-size: 1.2em;
     --color-cropmark: black;
-    --color-highlight:yellow
+    --color-highlight: yellow;
   }
 
   /* BASE BODY STYLES */
@@ -58,7 +73,7 @@
     font-size: 1.2em; /* Tailwind's `text-lg` or `text-xl` can also manage this */
     line-height: 1.6;
     color: var(--color-body);
-    letter-spacing: .2px;
+    letter-spacing: 0.2px;
   }
 
   /* Applying basic styles to headings that Tailwind resets */
@@ -82,14 +97,14 @@
     font-size: 1.2em;
     line-height: 1.6;
     color: var(--color-body);
-    letter-spacing: .2px;
+    letter-spacing: 0.2px;
   }
   a {
     color: var(--color-link);
   }
 }
 
-a.no-color{
+a.no-color {
   color: var(--color-body) !important;
   text-decoration: none !important;
 }
