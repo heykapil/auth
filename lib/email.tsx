@@ -3,7 +3,7 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const DEFAULT_SENDER_NAME = "Kapil Chaudhary";
-const DEFAULT_EMAIL = "admin.auth@kapil.app";
+const DEFAULT_EMAIL = "auth@mail.kapil.app";
 
 export async function sendEmail(
   email: string,
