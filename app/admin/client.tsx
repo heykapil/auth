@@ -320,12 +320,10 @@ export default function AdminDashboard() {
   const roles = ["user", "admin"];
 
   return (
-    <div className="mx-auto max-w-7xl sm:p-6 lg:p-8 bg-background">
+    <div className="mx-auto max-w-7xl p-3 sm:p-6 lg:p-8">
       <div className="rounded-lg">
         <div className="flex flex-row items-center justify-between">
-          <h1 className="text-3xl font-semibold text-gray-900">
-            Admin Dashboard
-          </h1>
+          <h1 className="text-base font-semibold text-gray-900">Admin Panel</h1>
           <PrimaryButton onClick={() => setIsCreateUserOpen(true)}>
             <Plus className="mr-2 h-4 w-4" /> Create User
           </PrimaryButton>
