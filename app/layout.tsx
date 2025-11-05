@@ -1,5 +1,6 @@
 import Header from "@/components/nav/navbar";
 import { SessionSync } from "@/components/nav/session-refetch";
+import { WrapperWithQuery } from "@/components/wrapper";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
@@ -23,7 +24,7 @@ export default async function RootLayout({
           <SessionSync />
         </Suspense>
         <main className="max-w-5xl mx-auto px-0 sm:px-6 lg:px-8 py-2">
-          {children}
+          <WrapperWithQuery>{children}</WrapperWithQuery>
         </main>
         <Toaster position="top-center" richColors />
       </body>

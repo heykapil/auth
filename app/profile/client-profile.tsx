@@ -25,6 +25,7 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
+import { Session } from "better-auth";
 import { ChangePassword } from "./change-password";
 import { PasskeyManager } from "./passkey-manager";
 import { ResetPassword } from "./ResetPassword";
@@ -46,9 +47,9 @@ export function ClientProfile({
   sessions,
   accounts,
 }: {
-  session: any;
+  session: Session;
   user: any;
-  sessions: any[];
+  sessions: Session[];
   accounts: Accounts[];
 }) {
   const router = useRouter();
@@ -78,7 +79,10 @@ export function ClientProfile({
                 <div className="space-y-1">
                   <h2 className="text-xl font-semibold">{user.name}</h2>
                   <p className="text-base text-muted-foreground">
-                    @{user?.username || user.email.split("@")[0]}
+                    @
+                    {user?.displayUsername ||
+                      user?.username ||
+                      user.email.split("@")[0]}
                   </p>
                 </div>
               </div>
@@ -111,7 +115,7 @@ export function ClientProfile({
               <p className="text-base">
                 Account type:{" "}
                 <span className="text-muted-foreground">
-                  {accounts[0].providerId}
+                  {accounts[0]?.providerId}
                 </span>
               </p>
             </div>
@@ -300,10 +304,7 @@ function DeleteAccountModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [confirmText, setConfirmText] = useState("");
-  const router = useRouter();
-
   const confirmationString = "delete my account";
-
   const handleDelete = async () => {
     if (confirmText !== confirmationString) {
       toast.error("Confirmation text does not match.");
@@ -316,7 +317,7 @@ function DeleteAccountModal() {
           onSuccess() {
             toast.success("Kindly check your email.");
             setIsOpen(false);
-            router.push("/logout"); // Redirect to homepage
+            // router.push("/logout"); // Redirect to homepage or logout
           },
           onError(context) {
             toast.error("Failed to delete account", {

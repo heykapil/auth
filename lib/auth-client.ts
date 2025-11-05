@@ -1,15 +1,21 @@
-import { magicLinkClient, passkeyClient, usernameClient } from "better-auth/client/plugins";
+import {
+  adminClient,
+  magicLinkClient,
+  passkeyClient,
+  usernameClient,
+} from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
-export const authClient =  createAuthClient({
+export const authClient = createAuthClient({
   baseURL: process.env.BETTER_AUTH_URL,
   credentials: "include", // ✅ ensure cookies are included
   plugins: [
     usernameClient(),
     magicLinkClient(),
     // emailOTPClient(),
-    passkeyClient()
-  ]
-})
+    passkeyClient(),
+    adminClient(),
+  ],
+});
 
 export const {
   signIn,
@@ -28,8 +34,7 @@ export const {
   forgetPassword,
   useSession,
   magicLink,
-  listSessions
+  listSessions,
 } = authClient;
 
-
-export type Session = typeof authClient.$Infer.Session
+export type Session = typeof authClient.$Infer.Session;

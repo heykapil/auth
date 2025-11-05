@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
-import { generateUserID } from "@/lib/userid";
+import { snowflake } from "@/lib/snowflake";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/dist/client/components/navigation";
 import { useState } from "react";
@@ -50,7 +50,7 @@ export function SignUpForm() {
     resolver: zodResolver(schema),
   });
   const [isLoading, setIsLoading] = useState(false);
-  const username = generateUserID();
+  const username = snowflake.generate().toString();
   const searchParams = useSearchParams();
   const redirectTo = searchParams?.get("redirectTo") || "/profile";
   async function onSubmit(values: any) {

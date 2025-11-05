@@ -1,8 +1,9 @@
-import { betterAuth, BetterAuthOptions } from "better-auth";
+import { APIError, betterAuth, BetterAuthOptions } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
-import { magicLink, username } from "better-auth/plugins";
+import { admin, magicLink, username } from "better-auth/plugins";
 import { passkey } from "better-auth/plugins/passkey";
 import { Pool } from "pg";
+import { getSession } from "./actions";
 import { sendDeleteAccountEmail } from "./delete-account-email";
 import { sendMagicLink } from "./magic-link";
 import { sendPasswordResetSuccessEmail } from "./password-reset-success-email";
@@ -22,13 +23,14 @@ export const auth = betterAuth({
     deleteUser: {
       enabled: true,
       deleteTokenExpiresIn: 10 * 60, // 10 minutes
-      // beforeDelete: async (user) => {
-      //   if (user?.username === "admin") {
-      //     throw new APIError("BAD_REQUEST", {
-      //       message: "Can not delete admin user",
-      //     });
-      //   }
-      // },
+      beforeDelete: async () => {
+        const session = await getSession();
+        if (session?.user?.username === "admin") {
+          throw new APIError("BAD_REQUEST", {
+            message: "Can not delete admin user",
+          });
+        }
+      },
       sendDeleteAccountVerification: async ({ user, url }) => {
         if (process.env.NODE_ENV === "development") {
           console.log("✨ Delete user link: " + url);
@@ -140,6 +142,7 @@ export const auth = betterAuth({
       disableSignUp: false,
     }),
     nextCookies(),
+    admin(),
   ],
 } satisfies BetterAuthOptions);
 
