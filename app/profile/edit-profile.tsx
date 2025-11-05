@@ -78,17 +78,17 @@ export default function EditProfile({ session, user }: Session) {
   }
 
   return (
-    <div className="flex flex-col items-center bg-white">
+    <div className="flex flex-col items-center ">
       <Button onClick={() => setOpen(true)}>Edit Profile</Button>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md bg-white">
+        <DialogContent className="max-w-md bg-[#faf9f6]">
           <DialogHeader>
             <DialogTitle>Edit Profile</DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col gap-4 bg-background"
+              className="flex flex-col gap-4"
             >
               <div className="flex flex-col items-center gap-2">
                 <Avatar className="w-20 h-20">

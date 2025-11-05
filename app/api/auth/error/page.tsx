@@ -10,7 +10,7 @@ export default async function ErrorPage({
         {error ? decodeURIComponent(error) : "Unknown API Error"}!
       </h3>
       <p className="animate-fade-up text-lg">
-        <span className="text-base italic capitalize">
+        <span className="text-base italic">
           {error_description
             ? decodeURIComponent(error_description)
             : "Unknown Error"}
