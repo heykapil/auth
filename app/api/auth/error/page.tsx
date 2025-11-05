@@ -3,14 +3,17 @@ export default async function ErrorPage({
 }: {
   searchParams: any;
 }) {
-  const { error } = await searchParams;
+  const { error, error_description } = await searchParams;
   return (
     <div className="flex mt-16 w-full mx-auto justify-center p-2 flex-col space-y-1">
-      <h3 className="animate-fade-right">API Error occured!</h3>
+      <h3 className="animate-fade-right capitalize">
+        {error ? decodeURIComponent(error) : "Unknown API Error"}!
+      </h3>
       <p className="animate-fade-up text-lg">
-        Possible cause:{" "}
-        <span className="text-base italic">
-          {error ? decodeURIComponent(error) : "Unknown Error"}
+        <span className="text-base italic capitalize">
+          {error_description
+            ? decodeURIComponent(error_description)
+            : "Unknown Error"}
         </span>
       </p>
       <p className="text-base">
