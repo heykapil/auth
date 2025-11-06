@@ -29,7 +29,7 @@ const profileSchema = z.object({
   image: z.string().url("Invalid image URL").or(z.literal("")),
 });
 
-const formatDate = (dateString: string) => {
+export const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   return new Intl.DateTimeFormat("en-IN", {
     dateStyle: "medium",
@@ -118,9 +118,7 @@ export default function Header() {
             className="h-10 w-auto cursor-pointer"
             onClick={() => router.push("/")}
           />
-          <span className="animate-fade-left font-semibold text-md">
-            auth.kapil.app
-          </span>
+          <span className="animate-fade-left text-lg">Kapil</span>
         </div>
         {/* --- DESKTOP MENU --- */}
         <div className="hidden lg:flex items-center gap-x-8">
@@ -250,7 +248,7 @@ export default function Header() {
         as="div"
         className="lg:hidden transition-transform "
       >
-        <DialogBackdrop className="fixed inset-0 z-40 overflow-y-auto bg-white/50" />
+        <DialogBackdrop className="fixed inset-0 z-40 overflow-y-auto bg-black/30" />
         <DialogPanel className="fixed inset-y-0 right-0 z-50 w-3/4 px-5 py-3 bg-[var(--color-background)] animate-fade-left">
           <div className="flex justify-between items-center mb-4">
             <span className="h-8"></span>

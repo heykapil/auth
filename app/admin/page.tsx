@@ -11,14 +11,14 @@ export default async function AdminServerPage() {
     return <AdminDashboard />;
   } else {
     return (
-      <div className="flex mt-16 w-full mx-auto justify-center p-2 max-w-sm flex-col gap-6">
+      <div className="flex mt-10 w-full mx-auto justify-center p-2 max-w-sm flex-col gap-6">
         <h2 className="animate-fade-right text-2xl font-semibold">
           Access Denied!
         </h2>
         <p className="animate-fade-up">
           You do not have the access to admin page.
         </p>
-        <p className="mt-10">
+        <p className="mt-4">
           Kindly{" "}
           <a className="font-medium underline underline-offset-2" href={`/`}>
             return back

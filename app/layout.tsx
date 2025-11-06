@@ -23,7 +23,7 @@ export default async function RootLayout({
           <Header />
           <SessionSync />
         </Suspense>
-        <main className="max-w-5xl mx-auto px-0 sm:px-6 lg:px-8 py-2">
+        <main className="max-w-5xl w-full mx-auto px-0 sm:px-6 lg:px-8 py-2">
           <WrapperWithQuery>{children}</WrapperWithQuery>
         </main>
         <Toaster position="top-center" richColors />
