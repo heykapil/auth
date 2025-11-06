@@ -15,7 +15,7 @@ import {
   loginSchemaMagicLink,
 } from "@/lib/schema/login";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Github, KeyIcon } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Github, KeyIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -72,6 +72,7 @@ export function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [step, setStep] = useState<"email" | "password">("email");
   const [loginMethod, setLoginMethod] = useState<"password" | "magic">(
     "password",
   );
@@ -123,6 +124,21 @@ export function LoginForm() {
         },
       })
       .finally(() => setLoading((prev) => ({ ...prev, passkey: false })));
+  }
+
+  async function handleEmailSubmit() {
+    const email = form.getValues("email");
+    const validation = loginSchemaMagicLink.safeParse({ email });
+
+    if (!validation.success) {
+      form.setError("email", {
+        type: "manual",
+        message: validation.error.issues[0].message,
+      });
+      return;
+    }
+    form.clearErrors("email");
+    setStep("password");
   }
 
   async function onSubmitPassword(
@@ -248,117 +264,168 @@ export function LoginForm() {
             <span className="sr-only">Saved passkey</span>
           </Button>
         </div>
-        <div className="relative flex items-center py-2">
-          <div className="flex-grow border-t border-gray-200"></div>
-          <span className="flex-shrink mx-4 text-xs text-gray-600 uppercase">
-            Or sign in with email
-          </span>
-          <div className="flex-grow border-t border-gray-200"></div>
-        </div>
+        {step === "password" ? (
+          <div className="flex items-center justify-between py-1">
+            <p className="text-base text-gray-700">
+              Hi,{" "}
+              <span className="font-semibold">{form.getValues("email")}</span>
+            </p>
+
+            <button
+              type="button"
+              onClick={() => {
+                setStep("email");
+                setLoginMethod("password");
+                form.setValue("password", "");
+              }}
+              className="text-sm font-semibold text-blue-600 hover:text-blue-500 flex items-center gap-1"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Edit email
+            </button>
+          </div>
+        ) : (
+          <div className="relative flex items-center py-2">
+            <div className="flex-grow border-t border-gray-200"></div>
+            <span className="flex-shrink mx-4 text-xs text-gray-600 uppercase">
+              Or sign in with email
+            </span>
+            <div className="flex-grow border-t border-gray-200"></div>
+          </div>
+        )}
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmitPassword)}
+            onSubmit={
+              step === "email"
+                ? (e) => {
+                    e.preventDefault();
+                    handleEmailSubmit();
+                  }
+                : loginMethod === "magic"
+                  ? (e) => {
+                      e.preventDefault();
+                      handleMagicLinkSubmit();
+                    }
+                  : form.handleSubmit(onSubmitPassword)
+            }
             className="space-y-4"
           >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base text-gray-700">
-                    Email Address
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="you@example.com"
-                      {...field}
-                      className="h-12"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Step 1: Email field */}
+            {step === "email" && (
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base text-gray-700">
+                      Email Address
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="you@example.com"
+                        {...field}
+                        className="h-12"
+                        autoFocus
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
-            {loginMethod === "password" && (
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex justify-between items-center">
-                        <FormLabel className="text-base text-gray-700">
-                          Password
-                        </FormLabel>
+            {/* Step 2: Password field (replaces email field position) */}
+            {step === "password" && loginMethod === "password" && (
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex justify-between items-center">
+                      <FormLabel className="text-base text-gray-700">
+                        Password
+                      </FormLabel>
+                      <button
+                        type="button"
+                        onClick={() => setLoginMethod("magic")}
+                        className="text-base font-semibold text-blue-600 hover:text-blue-500"
+                      >
+                        Forgot password?
+                      </button>
+                    </div>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          {...field}
+                          className="h-12 pr-10"
+                          autoFocus
+                        />
                         <button
                           type="button"
-                          onClick={() => setLoginMethod("magic")}
-                          className=" text-base font-semibold text-blue-600 hover:text-blue-500"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                          onClick={() => setShowPassword(!showPassword)}
                         >
-                          Forgot password?
+                          {showPassword ? (
+                            <EyeOff className="w-5 h-5" />
+                          ) : (
+                            <Eye className="w-5 h-5" />
+                          )}
                         </button>
                       </div>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            id="password"
-                            type={showPassword ? "text" : "password"}
-                            placeholder="••••••••"
-                            {...field}
-                            className="h-12 pr-10"
-                          />
-                          <button
-                            type="button"
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            {showPassword ? (
-                              <EyeOff className="w-5 h-5" />
-                            ) : (
-                              <Eye className="w-5 h-5" />
-                            )}
-                          </button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  type="submit"
-                  className="w-full h-12 text-base bg-blue-600 text-white font-medium hover:scale-101 transition-all duration-200 easy-in-out"
-                  disabled={loading["credentials"]}
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {/* Step 2: Magic link message (replaces email field position) */}
+            {step === "password" && loginMethod === "magic" && (
+              <div className="space-y-4">
+                <div className="text-base text-gray-600 py-1 text-center">
+                  We&apos;ll email you a magic link for a password-free sign in.
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setLoginMethod("password")}
+                  className="text-base font-semibold text-blue-600 hover:text-blue-500 w-full text-center"
                 >
-                  {loading["credentials"] ? <Spinner /> : "Sign In"}
-                </Button>
+                  Sign in with password instead
+                </button>
               </div>
             )}
 
-            {loginMethod === "magic" && (
-              <div className="space-y-6">
-                <div className="text-base text-center text-gray-600 mt-10">
-                  We&apos;ll email you a magic link for a password-free sign in.{" "}
-                  <button
-                    type="button"
-                    onClick={() => setLoginMethod("password")}
-                    className="font-semibold text-blue-600 hover:text-blue-500"
-                  >
-                    Sign in with password instead.
-                  </button>
-                </div>
-                <Button
-                  type="button"
-                  onClick={handleMagicLinkSubmit}
-                  className="w-full h-12 bg-blue-600 text-white hover:scale-101 transition-all duration-200 easy-in-out"
-                  disabled={loading["magic"]}
-                >
-                  {loading["magic"] ? <Spinner /> : "Send Magic Link"}
-                </Button>
-              </div>
-            )}
+            {/* Button - stays in same position across all states */}
+            <Button
+              type="submit"
+              className="w-full h-12 text-base bg-blue-600 text-white font-medium hover:scale-101 transition-all duration-200 easy-in-out"
+              disabled={
+                step === "email"
+                  ? isAnyLoading
+                  : loginMethod === "password"
+                    ? loading["credentials"]
+                    : loading["magic"]
+              }
+            >
+              {step === "email" ? (
+                "Continue"
+              ) : loginMethod === "password" ? (
+                loading["credentials"] ? (
+                  <Spinner />
+                ) : (
+                  "Sign In"
+                )
+              ) : loading["magic"] ? (
+                <Spinner />
+              ) : (
+                "Send Magic Link"
+              )}
+            </Button>
           </form>
         </Form>
 
