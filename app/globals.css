@@ -1,8 +1,7 @@
 @import "tailwindcss";
 @import "tailwindcss-animated";
 @layer base {
-  /* FONT DECLARATIONS */
-  @font-face {
+  /*@font-face {
     font-family: "linden hill";
     src:
       url("/fonts/LindenHill-Regular.woff2") format("woff2"),
@@ -28,12 +27,12 @@
     ascent-override: normal;
     descent-override: normal;
     line-gap-override: normal;
-  }
+  }*/
 
   /* Redefine CSS variables for use in tailwind.config.js or here */
   :root {
-    --font-serif: "Linden Hill", "Adjusted Georgia Fallback", serif;
-    --font-sans: "Linden Hill", "Adjusted Georgia Fallback", sans-serif;
+    /*--font-serif: "Linden Hill", "Adjusted Georgia Fallback", serif;
+    --font-sans: "Linden Hill", "Adjusted Georgia Fallback", sans-serif;*/
     --color-primary: #171717;
     --color-query-0: #b1b960;
     --color-query-1: #c2e6d3;
