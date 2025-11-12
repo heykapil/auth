@@ -12,11 +12,10 @@ export default async function LoginPage({
   const session = await getSession();
   if (session) {
     return (
-      <div className="flex flex-col space-y-2 gap-2 mt-10">
+      <div className="flex flex-col space-y-2 gap-2 mt-10 mx-2">
         <span className="flex">Hello, {session?.user?.name}! </span>
         <span className="flex space-x-1 gap-1">
-          You are already logged in with email
-          <u>{session?.user?.email}.</u>
+          You are already logged in with email {session?.user?.email}.
         </span>
         <a href={redirectTo !== undefined ? redirectTo : "/profile"}>
           Return back to{" "}

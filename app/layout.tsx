@@ -1,7 +1,8 @@
 import Header from "@/components/nav/navbar";
 import { SessionSync } from "@/components/nav/session-refetch";
 import { WrapperWithQuery } from "@/components/wrapper";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Figtree } from "next/font/google";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
@@ -10,6 +11,13 @@ export const metadata: Metadata = {
   description: "Auth - Kapil Chaudhary",
 };
 
+export const viewport: Viewport = {
+  themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f1f5f9" }],
+};
+
+const font = Figtree({
+  subsets: ["latin"],
+});
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -17,7 +25,31 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body
+        className={
+          "min-w-full w-full scroll-x-none antialiased" + font.className
+        }
+      >
+        <svg
+          className="pointer-events-none fixed top-0 left-0 isolate z-50 opacity-25 dark:opacity-[0.15] mix-blend-normal"
+          width="100%"
+          height="100%"
+        >
+          <filter id="pedroduarteisalegend">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.80"
+              numOctaves="4"
+              stitchTiles="stitch"
+            />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+          <rect
+            width="100%"
+            height="100%"
+            filter="url(#pedroduarteisalegend)"
+          ></rect>
+        </svg>
         <Suspense>
           <Header />
           <SessionSync />
@@ -25,7 +57,7 @@ export default async function RootLayout({
         <main className="max-w-5xl w-full mx-auto px-0 sm:px-6 lg:px-8 py-2">
           <WrapperWithQuery>{children}</WrapperWithQuery>
         </main>
-        <Toaster position="bottom-right" />
+        <Toaster expand richColors />
       </body>
     </html>
   );

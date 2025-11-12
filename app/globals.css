@@ -1,41 +1,8 @@
 @import "tailwindcss";
 @import "tailwindcss-animated";
-@import "@fontsource-variable/inter";
-@import "@fontsource-variable/newsreader";
-@import "@fontsource-variable/newsreader/wght-italic.css";
 @layer base {
-  /*@font-face {
-    font-family: "linden hill";
-    src:
-      url("/fonts/LindenHill-Regular.woff2") format("woff2"),
-      url("/fonts/LindenHill-Regular.woff") format("woff");
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: "linden hill";
-    src:
-      url("/fonts/LindenHill-Italic.woff2") format("woff2"),
-      url("/fonts/LindenHill-Italic.woff") format("woff");
-    font-style: italic;
-    font-weight: 400;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Adjusted Georgia Fallback";
-    src: local(Georgia);
-    size-adjust: 83%;
-    ascent-override: normal;
-    descent-override: normal;
-    line-gap-override: normal;
-  }*/
-
-  /* Redefine CSS variables for use in tailwind.config.js or here */
   :root {
-    --font-sans: "Inter Variable", sans-serif;
-    --font-serif: "Newsreader Variable", serif;
+    --font-sans: "Figtree", sans-serif;
     --color-primary: #171717;
     --color-query-0: #b1b960;
     --color-query-1: #c2e6d3;
@@ -71,8 +38,7 @@
   /* BASE BODY STYLES */
   body {
     background-color: var(--color-background);
-    font-family: var(--font-serif);
-    font-size: 1.2em; /* Tailwind's `text-lg` or `text-xl` can also manage this */
+    font-family: var(--font-sans);
     line-height: 1.6;
     color: var(--color-body);
     letter-spacing: 0.2px;
