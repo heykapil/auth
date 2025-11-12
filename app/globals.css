@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @import "tailwindcss-animated";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/newsreader";
+@import "@fontsource-variable/newsreader/wght-italic.css";
 @layer base {
   /*@font-face {
     font-family: "linden hill";
@@ -31,8 +34,8 @@
 
   /* Redefine CSS variables for use in tailwind.config.js or here */
   :root {
-    /*--font-serif: "Linden Hill", "Adjusted Georgia Fallback", serif;
-    --font-sans: "Linden Hill", "Adjusted Georgia Fallback", sans-serif;*/
+    --font-sans: "Inter Variable", sans-serif;
+    --font-serif: "Newsreader Variable", serif;
     --color-primary: #171717;
     --color-query-0: #b1b960;
     --color-query-1: #c2e6d3;
@@ -73,6 +76,7 @@
     line-height: 1.6;
     color: var(--color-body);
     letter-spacing: 0.2px;
+    scroll-behavior: smooth;
   }
 
   /* Applying basic styles to headings that Tailwind resets */
