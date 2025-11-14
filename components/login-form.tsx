@@ -212,8 +212,8 @@ export function LoginForm() {
       <div className="w-full max-w-md rounded-lg p-4 space-y-6">
         <div className="text-center">
           <h1 className="text-3xl text-gray-900">Welcome Back!</h1>
-          <span className="text-slate-500">
-            Sign in to continue your journey.
+          <span className="font-cooper text-slate-500">
+            Sign in to your account to continue your journey.
             <br />
             Use social account or a saved passkey.
           </span>
@@ -225,7 +225,7 @@ export function LoginForm() {
               aria-label='sign-in-with-google"'
               disabled={isAnyLoading}
               variant="ghost"
-              className=" w-full border-gray-100 border hover:scale-105 transition-all duration-200 easy-in-out"
+              className=" w-full cursor-pointer border-gray-200 border hover:scale-105 transition-all duration-200 easy-in-out"
               onClick={() => handleSocialLogin("google")}
             >
               {loading["google"] ? <Spinner /> : <GoogleIcon />}
@@ -238,7 +238,7 @@ export function LoginForm() {
               variant="ghost"
               id="sign-in-with-github"
               aria-label="sign-in-with-github"
-              className="border w-full  border-gray-100 hover:scale-105 transition-all duration-200 easy-in-out"
+              className="border cursor-pointer w-full  border-gray-200 hover:scale-105 transition-all duration-200 easy-in-out"
               onClick={() => handleSocialLogin("github")}
             >
               {loading["github"] ? <Spinner /> : <Github />} Github
@@ -250,7 +250,7 @@ export function LoginForm() {
               variant={"ghost"}
               id="sign-in-with-twitter"
               aria-label="sign-in-with-twitter"
-              className="border w-full border-gray-100 hover:scale-105 transition-all duration-200 easy-in-out"
+              className="border w-full cursor-pointer border-gray-200 hover:scale-105 transition-all duration-200 easy-in-out"
               onClick={() => handleSocialLogin("twitter")}
             >
               {loading["twitter"] ? <Spinner /> : <TwitterIcon />} Twitter
@@ -261,7 +261,7 @@ export function LoginForm() {
               variant="ghost"
               id="sign-in-with-passkey"
               aria-label="sign-in-with-passkey"
-              className="border w-full border-gray-100 hover:scale-105 transition-all duration-200 easy-in-out"
+              className="border  cursor-pointer w-full border-gray-200 hover:scale-105 transition-all duration-200 easy-in-out"
               onClick={signInPasskey}
               disabled={isAnyLoading}
             >
@@ -293,7 +293,7 @@ export function LoginForm() {
         ) : (
           <div className="relative flex items-center py-2">
             <div className="flex-grow border-t border-gray-200"></div>
-            <span className="flex-shrink mx-4 text-xs text-gray-600 uppercase">
+            <span className="flex-shrink mx-4 text-xs text-gray-600 font-mono uppercase">
               Or sign in with email
             </span>
             <div className="flex-grow border-t border-gray-200"></div>

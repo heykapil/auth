@@ -1,8 +1,37 @@
 @import "tailwindcss";
 @import "tailwindcss-animated";
+
+@font-face {
+  font-family: "cooperLtBT";
+  src: url("/fonts/cooper/CooperLtBT_Regular.ttf") format("truetype");
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "cooperLtBT";
+  src: url("/fonts/cooper/CooperLtBT_Italic.ttf") format("truetype");
+  font-display: swap;
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "cooperLtBT Fallback";
+  src: local(Arial);
+  ascent-override: 78.13%;
+  descent-override: 22.55%;
+  line-gap-override: 31.21%;
+  size-adjust: 99.32%;
+}
+
 @layer base {
   :root {
-    --font-sans: "Figtree", sans-serif;
+    --font-cooper: "cooperLtBT", "CooperLtBT Fallback";
+    --font-geist-mono: var(--font-geist-mono);
+    --font-mono: var(--font-geist-mono);
+    --font-sans: var(--font-figtree);
     --color-primary: #171717;
     --color-query-0: #b1b960;
     --color-query-1: #c2e6d3;
@@ -38,8 +67,8 @@
   /* BASE BODY STYLES */
   body {
     background-color: var(--color-background);
-    font-family: var(--font-sans);
     line-height: 1.6;
+    font-family: var(--font-sans);
     color: var(--color-body);
     letter-spacing: 0.2px;
     scroll-behavior: smooth;
@@ -48,32 +77,38 @@
   /* Applying basic styles to headings that Tailwind resets */
   h1 {
     font-size: 2em; /* approx text-4xl */
-    font-weight: 700; /* bold */
     margin: 0.67em 0;
+    font-family: var(--font-cooper);
   }
   h2 {
     font-size: 1.5em; /* approx text-4xl */
-    font-weight: 700; /* bold */
     margin: 0.56em 0;
+    font-family: var(--font-cooper);
   }
 
   h3 {
     font-size: 1.25em; /* approx text-2xl or 3xl */
-    font-weight: 700; /* bold */
     margin: 0.45em 0;
+    font-family: var(--font-cooper);
   }
   p {
     font-size: 1.2em;
     line-height: 1.6;
+    font-family: var(--font-sans);
     color: var(--color-body);
     letter-spacing: 0.2px;
   }
   a {
     color: var(--color-link);
+    font-family: var(--font-sans);
   }
 }
 
 a.no-color {
   color: var(--color-body) !important;
   text-decoration: none !important;
+}
+label {
+  font-size: 0.93rem;
+  font-family: var(--font-cooper);
 }

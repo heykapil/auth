@@ -118,7 +118,7 @@ export default function Header() {
             className="h-10 w-auto cursor-pointer"
             onClick={() => router.push("/")}
           />
-          <span className="animate-fade-left text-lg">auth.kapil.app</span>
+          <h3 className="animate-fade-left text-lg">auth.kapil.app</h3>
         </div>
         {/* --- DESKTOP MENU --- */}
         <div className="hidden lg:flex items-center gap-x-8">
