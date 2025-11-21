@@ -2,7 +2,11 @@ import { Pool, QueryResult, QueryResultRow } from 'pg';
 export type Primitive = string | number | boolean | undefined | null;
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL!,
-  ssl: true,
+  ssl: false,
+  prepare: false,
+  max: process.env.NODE_ENV === 'production' ? 5 : 1,
+  idle_timeout: 20,
+  connect_timeout: 10,
 })
 export const query = async <T extends QueryResultRow = any>(
   queryString: string,
