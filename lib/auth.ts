@@ -13,7 +13,8 @@ import { sendVerificationLink } from "./verification-email";
 export const auth = betterAuth({
   database: new Pool({
     connectionString: process.env.DATABASE_URL!,
-    ssl: true,
+    ssl: false,
+    idleTimeoutMillis: 30000,
   }),
   logger: {
     disabled: process.env.NODE_ENV === "production",
