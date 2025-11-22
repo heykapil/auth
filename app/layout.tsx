@@ -6,7 +6,7 @@ import { Figtree, Geist_Mono } from "next/font/google";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
-
+import Script from 'next/script';
 export const metadata: Metadata = {
   title: "Authentication",
   description: "Auth - Kapil Chaudhary",
@@ -39,6 +39,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className={"min-w-full w-full scroll-x-none antialiased"}>
+        <Script defer src="https://analytics.kapil.app/script.js" data-website-id="8ff15618-d91d-4804-840c-70e42dcbddd0" />
         <svg
           className="pointer-events-none fixed top-0 left-0 isolate z-50 opacity-25 dark:opacity-[0.15] mix-blend-normal"
           width="100%"
