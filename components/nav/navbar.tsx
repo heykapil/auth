@@ -113,7 +113,7 @@ export default function Header() {
       <div className="container mx-auto flex h-14 items-center justify-between px-3">
         <div className="flex gap-3 items-center">
           <img
-            src="https://cdn.kapil.app/images/website/logos/k.png"
+            src="https://cdn.kapil.app/logo.svg"
             alt="Logo"
             className="h-10 w-auto cursor-pointer"
             onClick={() => router.push("/")}
